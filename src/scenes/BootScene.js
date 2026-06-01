@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import AudioManager from '../utils/AudioManager';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -9,7 +10,6 @@ export default class BootScene extends Phaser.Scene {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Progress box
     const boxWidth = 320;
     const boxHeight = 50;
     const boxX = (width - boxWidth) / 2;
@@ -19,7 +19,6 @@ export default class BootScene extends Phaser.Scene {
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(boxX, boxY, boxWidth, boxHeight);
 
-    // Loading text
     const loadingText = this.add.text(
       width / 2,
       height / 2 - 25,
@@ -32,7 +31,6 @@ export default class BootScene extends Phaser.Scene {
     );
     loadingText.setOrigin(0.5, 0.5);
 
-    // Percent text
     const percentText = this.add.text(
       width / 2,
       height / 2,
@@ -45,7 +43,6 @@ export default class BootScene extends Phaser.Scene {
     );
     percentText.setOrigin(0.5, 0.5);
 
-    // Progress events
     this.load.on('progress', (value) => {
       progressBar.clear();
       progressBar.fillStyle(0x8B4513, 1);
@@ -59,9 +56,66 @@ export default class BootScene extends Phaser.Scene {
       loadingText.destroy();
       percentText.destroy();
     });
+
+    // Frank sprites
+    this.load.spritesheet('frank-idle', 'assets/frank/idle.png', {
+      frameWidth: 200,
+      frameHeight: 300,
+      frameMax: 2
+    });
+    this.load.spritesheet('frank-talk', 'assets/frank/talk.png', {
+      frameWidth: 200,
+      frameHeight: 300,
+      frameMax: 4
+    });
+
+    // Mannequin
+    this.load.image('mannequin', 'assets/mannequin/mannequin.png');
+
+    // Garments
+    const garments = [
+      'camisa-formal', 'camiseta', 'polo', 'blazer', 'sueter',
+      'pantalon-formal', 'jeans', 'bermudas', 'falda', 'pantalon-lino',
+      'zapatos-vestir', 'mocasines', 'zapatillas', 'sandalias', 'botas',
+      'corbata', 'reloj', 'gafas-sol', 'abrigo', 'chaleco'
+    ];
+    garments.forEach((id) => {
+      this.load.image(`garment_${id}`, `assets/garments/${id}.png`);
+    });
+
+    // UI elements
+    const uiElements = [
+      'btn-play', 'btn-history', 'btn-back', 'btn-ready',
+      'panel-dialogue', 'tab-bg', 'tab-active'
+    ];
+    uiElements.forEach((name) => {
+      this.load.image(name, `assets/ui/${name}.png`);
+    });
+
+    // Audio via AudioManager
+    AudioManager.preload(this);
   }
 
   create() {
+    // Initialize audio
+    AudioManager.init(this);
+    this.registry.set('audioManager', AudioManager);
+
+    // Frank animations
+    this.anims.create({
+      key: 'frank_idle',
+      frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 1 }),
+      frameRate: 2,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'frank_talk',
+      frames: this.anims.generateFrameNumbers('frank-talk', { start: 0, end: 3 }),
+      frameRate: 8,
+      repeat: -1
+    });
+
     this.scene.start('MenuScene');
   }
 }
