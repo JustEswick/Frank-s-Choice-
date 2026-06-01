@@ -1,4 +1,10 @@
 import Phaser from 'phaser';
+import BootScene from './scenes/BootScene.js';
+import MenuScene from './scenes/MenuScene.js';
+import BuilderScene from './scenes/BuilderScene.js';
+import QuizScene from './scenes/QuizScene.js';
+import RevealScene from './scenes/RevealScene.js';
+import HistoryScene from './scenes/HistoryScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -10,7 +16,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  scene: []
+  scene: [BootScene, MenuScene, BuilderScene, QuizScene, RevealScene, HistoryScene]
 };
 
 const game = new Phaser.Game(config);
