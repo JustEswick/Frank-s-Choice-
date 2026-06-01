@@ -32,8 +32,11 @@ export default class BuilderScene extends Phaser.Scene {
     this.outfit = {};
     this.activeCategory = CATEGORIES[0];
     this.mannequinGarments = {};
-    this.thumbnailButtons = [];
     this.tabButtons = [];
+    this.thumbnailButtons = [];
+    this.thumbnailZones = [];
+    this.readyZone = null;
+    this.removeZone = null;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
 
@@ -51,8 +54,8 @@ export default class BuilderScene extends Phaser.Scene {
 
     this.mannequin = this.add.image(mannequinX, mannequinY, 'mannequin');
     this.mannequin.setDisplaySize(300, 500);
+    this.mannequin.setDepth(1);
 
-    this.thumbnailContainer = this.add.container(0, 0);
     this.garmentDisplayContainer = this.add.container(0, 0);
 
     this.createTabs();
@@ -60,6 +63,83 @@ export default class BuilderScene extends Phaser.Scene {
     this.createReadyButton();
     this.createRemoveButton();
     this.updateThumbnails();
+
+    this.input.on('pointerdown', (pointer) => {
+      for (const zone of this.thumbnailZones) {
+        if (
+          pointer.x >= zone.x && pointer.x <= zone.x + zone.width &&
+          pointer.y >= zone.y && pointer.y <= zone.y + zone.height
+        ) {
+          audioManager.playSFX('select');
+          this.selectGarment(zone.garment);
+          this.updateThumbnails();
+          return;
+        }
+      }
+
+      for (const zone of this.tabZones) {
+        if (
+          pointer.x >= zone.x && pointer.x <= zone.x + zone.width &&
+          pointer.y >= zone.y && pointer.y <= zone.y + zone.height
+        ) {
+          audioManager.playSFX('click');
+          this.activeCategory = zone.category;
+          this.refreshTabs();
+          this.updateThumbnails();
+          return;
+        }
+      }
+
+      if (this.readyZone) {
+        const z = this.readyZone;
+        if (
+          pointer.x >= z.x && pointer.x <= z.x + z.width &&
+          pointer.y >= z.y && pointer.y <= z.y + z.height
+        ) {
+          if (Object.keys(this.outfit).length === 0) return;
+          audioManager.playSFX('transition');
+
+          const outfitArray = Object.values(this.outfit).map(g => ({
+            id: g.id,
+            category: g.category,
+            name: g.name,
+            tags: g.tags
+          }));
+          this.registry.set('playerOutfit', outfitArray);
+
+          this.cameras.main.fadeOut(500, 74, 55, 40);
+          this.time.delayedCall(500, () => {
+            this.scene.start('QuizScene');
+          });
+          return;
+        }
+      }
+
+      if (this.removeZone) {
+        const z = this.removeZone;
+        if (
+          pointer.x >= z.x && pointer.x <= z.x + z.width &&
+          pointer.y >= z.y && pointer.y <= z.y + z.height
+        ) {
+          if (!this.outfit[this.activeCategory]) return;
+          audioManager.playSFX('remove');
+
+          const entry = this.mannequinGarments[this.activeCategory];
+          if (entry) {
+            this.tweens.add({
+              targets: entry.image,
+              alpha: 0,
+              duration: 300,
+              onComplete: () => entry.image.destroy()
+            });
+            delete this.mannequinGarments[this.activeCategory];
+          }
+          delete this.outfit[this.activeCategory];
+          this.updateThumbnails();
+          return;
+        }
+      }
+    });
   }
 
   createTabs() {
@@ -69,29 +149,35 @@ export default class BuilderScene extends Phaser.Scene {
     const startX = width / 2 - (CATEGORIES.length * (tabWidth + 8)) / 2 + tabWidth / 2;
     const tabY = height - 40;
 
+    this.tabZones = [];
+
     CATEGORIES.forEach((cat, i) => {
       const x = startX + i * (tabWidth + 8);
+
       const bg = this.add.rectangle(x, tabY, tabWidth, tabHeight, 0x2E8B57)
         .setStrokeStyle(2, 0x1A5C3A)
-        .setInteractive({ useHandCursor: true });
+        .setDepth(100);
 
       const label = this.add.text(x, tabY, t(`categories.${cat}`), {
         fontFamily: 'Inter',
         fontSize: '14px',
         color: '#FFFFFF',
         fontStyle: 'bold'
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setDepth(101);
 
       if (cat !== this.activeCategory) {
         bg.setFillStyle(0x8B7355);
         bg.setStrokeStyle(2, 0x6B5335);
       }
 
-      bg.on('pointerdown', () => {
-        audioManager.playSFX('click');
-        this.activeCategory = cat;
-        this.refreshTabs();
-        this.updateThumbnails();
+      this.tabZones.push({
+        category: cat,
+        bg,
+        label,
+        x: x - tabWidth / 2,
+        y: tabY - tabHeight / 2,
+        width: tabWidth,
+        height: tabHeight
       });
 
       this.tabButtons.push({ category: cat, bg, label });
@@ -111,13 +197,18 @@ export default class BuilderScene extends Phaser.Scene {
   }
 
   createThumbnailPanel() {
-    this.thumbnailContainer.removeAll(true);
-    this.thumbnailButtons = [];
+    this.thumbnailZones = [];
   }
 
   updateThumbnails() {
-    const audioManager = this.registry.get('audioManager');
-    this.thumbnailContainer.removeAll(true);
+    const { width } = this.cameras.main;
+
+    this.thumbnailZones = [];
+    this.thumbnailButtons.forEach(btn => {
+      btn.bg.destroy();
+      btn.label.destroy();
+      if (btn.thumbImg && btn.thumbImg.destroy) btn.thumbImg.destroy();
+    });
     this.thumbnailButtons = [];
 
     const filtered = garmentsData.garments.filter(g => g.category === this.activeCategory);
@@ -137,19 +228,20 @@ export default class BuilderScene extends Phaser.Scene {
 
       const bg = this.add.rectangle(x, y, thumbSize, thumbSize, 0xE8D5C0)
         .setStrokeStyle(2, this.outfit[this.activeCategory]?.id === garment.id ? 0x2E8B57 : 0xBBAA88)
-        .setInteractive({ useHandCursor: true });
+        .setDepth(10);
 
       let thumbImg;
       if (this.textures.exists(spriteKey)) {
         thumbImg = this.add.image(x, y, spriteKey);
         thumbImg.setDisplaySize(thumbSize - 8, thumbSize - 8);
+        thumbImg.setDepth(11);
       } else {
         thumbImg = this.add.text(x, y, garment.name.es.charAt(0), {
           fontFamily: 'Inter',
           fontSize: '18px',
           color: '#4A3728',
           fontStyle: 'bold'
-        }).setOrigin(0.5);
+        }).setOrigin(0.5).setDepth(11);
       }
 
       const nameText = this.add.text(x, y + thumbSize / 2 + 4, garment.name.es, {
@@ -158,22 +250,21 @@ export default class BuilderScene extends Phaser.Scene {
         color: '#4A3728',
         wordWrap: { width: thumbSize + 10 },
         align: 'center'
-      }).setOrigin(0.5, 0);
+      }).setOrigin(0.5, 0).setDepth(11);
 
-      bg.on('pointerdown', () => {
-        audioManager.playSFX('select');
-        this.selectGarment(garment);
-        this.updateThumbnails();
+      this.thumbnailZones.push({
+        garment,
+        x: x - thumbSize / 2,
+        y: y - thumbSize / 2,
+        width: thumbSize,
+        height: thumbSize
       });
 
-      this.thumbnailContainer.add([bg, thumbImg, nameText]);
-      this.thumbnailButtons.push({ garment, bg });
+      this.thumbnailButtons.push({ garment, bg, thumbImg, label: nameText });
     });
   }
 
   selectGarment(garment) {
-    const audioManager = this.registry.get('audioManager');
-
     if (this.mannequinGarments[garment.category]) {
       const old = this.mannequinGarments[garment.category];
       this.tweens.add({
@@ -220,83 +311,51 @@ export default class BuilderScene extends Phaser.Scene {
 
   createReadyButton() {
     const { width, height } = this.cameras.main;
+    const btnWidth = 140;
+    const btnHeight = 40;
 
-    this.readyBtnBg = this.add.rectangle(width - 100, height - 40, 140, 40, 0x2E8B57)
+    this.add.rectangle(width - 100, height - 40, btnWidth, btnHeight, 0x2E8B57)
       .setStrokeStyle(2, 0x1A5C3A)
-      .setInteractive({ useHandCursor: true });
+      .setDepth(100);
 
-    this.readyBtnLabel = this.add.text(width - 100, height - 40, t('ready'), {
+    this.add.text(width - 100, height - 40, t('ready'), {
       fontFamily: 'Inter',
       fontSize: '16px',
       color: '#FFFFFF',
       fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(101);
 
-    this.readyBtnBg.on('pointerdown', () => {
-      if (Object.keys(this.outfit).length === 0) return;
-
-      const audioManager = this.registry.get('audioManager');
-      audioManager.playSFX('transition');
-
-      const outfitArray = Object.values(this.outfit).map(g => ({
-        id: g.id,
-        category: g.category,
-        name: g.name,
-        tags: g.tags
-      }));
-      this.registry.set('playerOutfit', outfitArray);
-
-      this.cameras.main.fadeOut(500, 74, 55, 40);
-      this.time.delayedCall(500, () => {
-        this.scene.start('QuizScene');
-      });
-    });
-
-    this.readyBtnBg.on('pointerover', () => {
-      if (Object.keys(this.outfit).length > 0) {
-        this.readyBtnBg.setFillStyle(0x257045);
-      }
-    });
-    this.readyBtnBg.on('pointerout', () => this.readyBtnBg.setFillStyle(0x2E8B57));
+    this.readyZone = {
+      x: width - 100 - btnWidth / 2,
+      y: height - 40 - btnHeight / 2,
+      width: btnWidth,
+      height: btnHeight
+    };
   }
 
   createRemoveButton() {
     const { width } = this.cameras.main;
     const mx = width / 2;
+    const btnWidth = 160;
+    const btnHeight = 36;
 
-    this.removeBtnBg = this.add.rectangle(mx, this.mannequinY + 210, 160, 36, 0xAA4444)
+    this.add.rectangle(mx, this.mannequinY + 210, btnWidth, btnHeight, 0xAA4444)
       .setStrokeStyle(2, 0x882222)
-      .setInteractive({ useHandCursor: true });
+      .setDepth(100);
 
     const removeLabel = getLang() === 'es' ? 'Quitar prenda' : 'Remove garment';
-    this.removeBtnLabel = this.add.text(mx, this.mannequinY + 210, removeLabel, {
+    this.add.text(mx, this.mannequinY + 210, removeLabel, {
       fontFamily: 'Inter',
       fontSize: '13px',
       color: '#FFFFFF',
       fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(101);
 
-    this.removeBtnBg.on('pointerdown', () => {
-      const audioManager = this.registry.get('audioManager');
-      if (!this.outfit[this.activeCategory]) return;
-
-      audioManager.playSFX('remove');
-
-      const entry = this.mannequinGarments[this.activeCategory];
-      if (entry) {
-        this.tweens.add({
-          targets: entry.image,
-          alpha: 0,
-          duration: 300,
-          onComplete: () => entry.image.destroy()
-        });
-        delete this.mannequinGarments[this.activeCategory];
-      }
-      delete this.outfit[this.activeCategory];
-      this.updateThumbnails();
-    });
-
-    this.removeBtnBg.on('pointerover', () => this.removeBtnBg.setFillStyle(0x883333));
-    this.removeBtnBg.on('pointerout', () => this.removeBtnBg.setFillStyle(0xAA4444));
+    this.removeZone = {
+      x: mx - btnWidth / 2,
+      y: this.mannequinY + 210 - btnHeight / 2,
+      width: btnWidth,
+      height: btnHeight
+    };
   }
 }

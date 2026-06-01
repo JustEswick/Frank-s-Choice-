@@ -35,13 +35,14 @@ export default class QuizScene extends Phaser.Scene {
       width / 2, height - 70, width * 0.9, 120, 0x4A3728, 0.9
     ).setStrokeStyle(2, 0xDAA520);
 
-    this.dialogueText = this.add.text(40, height - 120, '', {
+    this.dialogueText = this.add.text(width / 2, height - 110, '', {
       fontFamily: 'Inter',
       fontSize: '18px',
       color: '#F5E6D3',
-      wordWrap: { width: width * 0.84 },
-      lineSpacing: 6
-    });
+      wordWrap: { width: width * 0.82 },
+      lineSpacing: 6,
+      align: 'center'
+    }).setOrigin(0.5);
 
     this.progressBg = this.add.rectangle(width - 90, height - 30, 120, 10, 0x888888);
     this.progressFill = this.add.rectangle(
