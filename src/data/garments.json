@@ -1,0 +1,324 @@
+{
+  "garments": [
+    {
+      "id": "camisa_formal",
+      "category": "superior",
+      "name": {
+        "es": "Camisa Formal",
+        "en": "Formal Shirt"
+      },
+      "sprite": "assets/sprites/camisa_formal.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.9,
+        "clima": ["templado", "frio"],
+        "colores": ["blanco", "azul", "negro"],
+        "textura": ["seda", "algodon"]
+      }
+    },
+    {
+      "id": "camiseta",
+      "category": "superior",
+      "name": {
+        "es": "Camiseta",
+        "en": "T-Shirt"
+      },
+      "sprite": "assets/sprites/camiseta.png",
+      "tags": {
+        "evento": ["casual", "playa", "fiesta"],
+        "formalidad": 0.1,
+        "clima": ["calor", "templado"],
+        "colores": ["blanco", "negro", "azul", "rojo"],
+        "textura": ["algodon"]
+      }
+    },
+    {
+      "id": "polo",
+      "category": "superior",
+      "name": {
+        "es": "Polo",
+        "en": "Polo Shirt"
+      },
+      "sprite": "assets/sprites/polo.png",
+      "tags": {
+        "evento": ["trabajo", "casual", "graduacion"],
+        "formalidad": 0.5,
+        "clima": ["calor", "templado"],
+        "colores": ["blanco", "azul", "negro", "gris"],
+        "textura": ["algodon"]
+      }
+    },
+    {
+      "id": "blazer",
+      "category": "superior",
+      "name": {
+        "es": "Blazer",
+        "en": "Blazer"
+      },
+      "sprite": "assets/sprites/blazer.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion", "fiesta"],
+        "formalidad": 0.85,
+        "clima": ["templado", "frio"],
+        "colores": ["negro", "azul", "gris"],
+        "textura": ["lana", "tela"]
+      }
+    },
+    {
+      "id": "sueter",
+      "category": "superior",
+      "name": {
+        "es": "Suéter",
+        "en": "Sweater"
+      },
+      "sprite": "assets/sprites/sueter.png",
+      "tags": {
+        "evento": ["casual", "trabajo"],
+        "formalidad": 0.35,
+        "clima": ["frio"],
+        "colores": ["gris", "negro", "marron", "azul"],
+        "textura": ["lana", "algodon"]
+      }
+    },
+    {
+      "id": "pantalon_formal",
+      "category": "inferior",
+      "name": {
+        "es": "Pantalón Formal",
+        "en": "Dress Pants"
+      },
+      "sprite": "assets/sprites/pantalon_formal.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.9,
+        "clima": ["templado", "frio"],
+        "colores": ["negro", "gris", "azul"],
+        "textura": ["tela", "lana"]
+      }
+    },
+    {
+      "id": "jeans",
+      "category": "inferior",
+      "name": {
+        "es": "Jeans",
+        "en": "Jeans"
+      },
+      "sprite": "assets/sprites/jeans.png",
+      "tags": {
+        "evento": ["casual", "playa", "fiesta"],
+        "formalidad": 0.2,
+        "clima": ["calor", "templado", "frio"],
+        "colores": ["azul", "negro"],
+        "textura": ["denim"]
+      }
+    },
+    {
+      "id": "bermudas",
+      "category": "inferior",
+      "name": {
+        "es": "Bermudas",
+        "en": "Shorts"
+      },
+      "sprite": "assets/sprites/bermudas.png",
+      "tags": {
+        "evento": ["casual", "playa"],
+        "formalidad": 0.1,
+        "clima": ["calor"],
+        "colores": ["beige", "azul", "negro"],
+        "textura": ["algodon", "lino"]
+      }
+    },
+    {
+      "id": "falda",
+      "category": "inferior",
+      "name": {
+        "es": "Falda",
+        "en": "Skirt"
+      },
+      "sprite": "assets/sprites/falda.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "fiesta", "graduacion"],
+        "formalidad": 0.7,
+        "clima": ["calor", "templado"],
+        "colores": ["negro", "beige", "azul", "rojo"],
+        "textura": ["tela", "seda"]
+      }
+    },
+    {
+      "id": "pantalon_lino",
+      "category": "inferior",
+      "name": {
+        "es": "Pantalón de Lino",
+        "en": "Linen Pants"
+      },
+      "sprite": "assets/sprites/pantalon_lino.png",
+      "tags": {
+        "evento": ["casual", "playa", "graduacion"],
+        "formalidad": 0.45,
+        "clima": ["calor"],
+        "colores": ["beige", "blanco", "azul"],
+        "textura": ["lino"]
+      }
+    },
+    {
+      "id": "zapatos_vestir",
+      "category": "calzado",
+      "name": {
+        "es": "Zapatos de Vestir",
+        "en": "Dress Shoes"
+      },
+      "sprite": "assets/sprites/zapatos_vestir.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.95,
+        "clima": ["templado", "frio"],
+        "colores": ["negro", "marron"],
+        "textura": ["cuero"]
+      }
+    },
+    {
+      "id": "mocasines",
+      "category": "calzado",
+      "name": {
+        "es": "Mocasines",
+        "en": "Loafers"
+      },
+      "sprite": "assets/sprites/mocasines.png",
+      "tags": {
+        "evento": ["trabajo", "casual", "graduacion"],
+        "formalidad": 0.6,
+        "clima": ["calor", "templado"],
+        "colores": ["marron", "negro", "beige"],
+        "textura": ["cuero"]
+      }
+    },
+    {
+      "id": "zapatillas",
+      "category": "calzado",
+      "name": {
+        "es": "Zapatillas",
+        "en": "Sneakers"
+      },
+      "sprite": "assets/sprites/zapatillas.png",
+      "tags": {
+        "evento": ["casual", "playa", "fiesta"],
+        "formalidad": 0.1,
+        "clima": ["calor", "templado"],
+        "colores": ["blanco", "negro", "gris"],
+        "textura": ["tela", "algodon"]
+      }
+    },
+    {
+      "id": "sandalias",
+      "category": "calzado",
+      "name": {
+        "es": "Sandalias",
+        "en": "Sandals"
+      },
+      "sprite": "assets/sprites/sandalias.png",
+      "tags": {
+        "evento": ["casual", "playa"],
+        "formalidad": 0.05,
+        "clima": ["calor"],
+        "colores": ["marron", "beige", "negro"],
+        "textura": ["cuero", "tela"]
+      }
+    },
+    {
+      "id": "botas",
+      "category": "calzado",
+      "name": {
+        "es": "Botas",
+        "en": "Boots"
+      },
+      "sprite": "assets/sprites/botas.png",
+      "tags": {
+        "evento": ["casual", "trabajo"],
+        "formalidad": 0.3,
+        "clima": ["frio", "templado"],
+        "colores": ["marron", "negro"],
+        "textura": ["cuero"]
+      }
+    },
+    {
+      "id": "corbata",
+      "category": "accesorio",
+      "name": {
+        "es": "Corbata",
+        "en": "Tie"
+      },
+      "sprite": "assets/sprites/corbata.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.95,
+        "clima": ["templado", "frio"],
+        "colores": ["negro", "azul", "rojo", "gris"],
+        "textura": ["seda"]
+      }
+    },
+    {
+      "id": "reloj",
+      "category": "accesorio",
+      "name": {
+        "es": "Reloj",
+        "en": "Watch"
+      },
+      "sprite": "assets/sprites/reloj.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion", "casual", "fiesta"],
+        "formalidad": 0.7,
+        "clima": ["calor", "templado", "frio"],
+        "colores": ["negro", "marron", "gris"],
+        "textura": ["cuero", "tela"]
+      }
+    },
+    {
+      "id": "gafas_sol",
+      "category": "accesorio",
+      "name": {
+        "es": "Gafas de Sol",
+        "en": "Sunglasses"
+      },
+      "sprite": "assets/sprites/gafas_sol.png",
+      "tags": {
+        "evento": ["casual", "playa", "fiesta"],
+        "formalidad": 0.2,
+        "clima": ["calor"],
+        "colores": ["negro", "marron", "azul"],
+        "textura": ["tela"]
+      }
+    },
+    {
+      "id": "abrigo",
+      "category": "capa",
+      "name": {
+        "es": "Abrigo",
+        "en": "Coat"
+      },
+      "sprite": "assets/sprites/abrigo.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.8,
+        "clima": ["frio"],
+        "colores": ["negro", "gris", "marron"],
+        "textura": ["lana", "cuero"]
+      }
+    },
+    {
+      "id": "chaleco",
+      "category": "capa",
+      "name": {
+        "es": "Chaleco",
+        "en": "Vest"
+      },
+      "sprite": "assets/sprites/chaleco.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion", "fiesta"],
+        "formalidad": 0.85,
+        "clima": ["templado", "frio"],
+        "colores": ["negro", "azul", "gris"],
+        "textura": ["tela", "lana"]
+      }
+    }
+  ]
+}
