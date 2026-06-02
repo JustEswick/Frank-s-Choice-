@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { t } from '../utils/i18n.js';
 import PersistenceManager from '../systems/PersistenceManager.js';
+import UIButton from '../utils/UIButton.js';
 
 const BEIGE = 0xF5E6D3;
 const BROWN = 0x4A3728;
@@ -56,25 +57,16 @@ export default class HistoryScene extends Phaser.Scene {
       });
     }
 
-    const backBtn = this.add.rectangle(width / 2, height - 40, 180, 44, BROWN)
-      .setStrokeStyle(2, 0x2E1F14)
-      .setInteractive({ useHandCursor: true });
-
-    const backText = this.add.text(width / 2, height - 40, t('back'), {
-      fontFamily: 'Inter',
+    new UIButton(this, width / 2, height - 40, 180, 44, t('back'), {
+      sfx: 'click',
+      fillColor: BROWN,
+      hoverColor: 0x5C4536,
+      strokeColor: 0x2E1F14,
       fontSize: '18px',
-      color: '#FFFFFF',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
-
-    backBtn.on('pointerover', () => backBtn.setFillStyle(0x5C4536));
-    backBtn.on('pointerout', () => backBtn.setFillStyle(BROWN));
-    backBtn.on('pointerdown', () => {
-      audioManager.playSFX('click');
-      this.scene.start('MenuScene');
+      callback: () => this.scene.start('MenuScene')
     });
 
-    audioManager.playMusic('main');
+    audioManager.playMusic('jazz-main');
   }
 
   createRoundRow(width, y, round, roundNum) {

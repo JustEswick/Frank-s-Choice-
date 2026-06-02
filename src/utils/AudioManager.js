@@ -2,6 +2,7 @@ import { Howl, Howler } from 'howler';
 
 const MUSIC_PATH = 'assets/audio/music/';
 const SFX_PATH = 'assets/audio/sfx/';
+const STORAGE_KEY = 'frank_audio_settings';
 
 const MUSIC_FILES = {
   'jazz-main': 'jazz-main.mp3',
@@ -30,6 +31,7 @@ export default class AudioManager {
   static currentMusic = null;
   static musicVolume = DEFAULT_MUSIC_VOLUME;
   static sfxVolume = DEFAULT_SFX_VOLUME;
+  static masterVolume = DEFAULT_MASTER_VOLUME;
 
   static preload(scene) {
     Object.entries(MUSIC_FILES).forEach(([key, file]) => {
@@ -42,6 +44,8 @@ export default class AudioManager {
   }
 
   static init(scene) {
+    AudioManager.loadSettings();
+
     Object.keys(MUSIC_FILES).forEach((key) => {
       AudioManager.music[key] = new Howl({
         src: [MUSIC_PATH + MUSIC_FILES[key]],
@@ -58,6 +62,34 @@ export default class AudioManager {
         preload: true
       });
     });
+
+    Howler.volume(AudioManager.masterVolume);
+  }
+
+  static loadSettings() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const settings = JSON.parse(stored);
+        AudioManager.masterVolume = settings.master ?? DEFAULT_MASTER_VOLUME;
+        AudioManager.musicVolume = settings.music ?? DEFAULT_MUSIC_VOLUME;
+        AudioManager.sfxVolume = settings.sfx ?? DEFAULT_SFX_VOLUME;
+      }
+    } catch (e) {
+      console.warn('Failed to load audio settings:', e);
+    }
+  }
+
+  static saveSettings() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        master: AudioManager.masterVolume,
+        music: AudioManager.musicVolume,
+        sfx: AudioManager.sfxVolume
+      }));
+    } catch (e) {
+      console.warn('Failed to save audio settings:', e);
+    }
   }
 
   static playMusic(track) {
@@ -68,7 +100,7 @@ export default class AudioManager {
     const howl = AudioManager.music[track];
     if (howl) {
       AudioManager.currentMusic = howl;
-      AudioManager.currentMusic.volume(AudioManager.musicVolume);
+      AudioManager.currentMusic.volume(AudioManager.musicVolume * AudioManager.masterVolume);
       AudioManager.currentMusic.play();
     }
   }
@@ -83,29 +115,30 @@ export default class AudioManager {
   static playSFX(name) {
     const howl = AudioManager.sfx[name];
     if (howl) {
-      howl.volume(AudioManager.sfxVolume);
+      howl.volume(AudioManager.sfxVolume * AudioManager.masterVolume);
       howl.play();
     }
   }
 
   static setMusicVolume(vol) {
-    AudioManager.musicVolume = vol;
-    Object.values(AudioManager.music).forEach((howl) => {
-      howl.volume(vol);
-    });
+    AudioManager.musicVolume = Math.max(0, Math.min(1, vol));
     if (AudioManager.currentMusic) {
-      AudioManager.currentMusic.volume(vol);
+      AudioManager.currentMusic.volume(AudioManager.musicVolume * AudioManager.masterVolume);
     }
+    AudioManager.saveSettings();
   }
 
   static setSFXVolume(vol) {
-    AudioManager.sfxVolume = vol;
-    Object.values(AudioManager.sfx).forEach((howl) => {
-      howl.volume(vol);
-    });
+    AudioManager.sfxVolume = Math.max(0, Math.min(1, vol));
+    AudioManager.saveSettings();
   }
 
   static setMasterVolume(vol) {
-    Howler.volume(vol);
+    AudioManager.masterVolume = Math.max(0, Math.min(1, vol));
+    Howler.volume(AudioManager.masterVolume);
+    if (AudioManager.currentMusic) {
+      AudioManager.currentMusic.volume(AudioManager.musicVolume * AudioManager.masterVolume);
+    }
+    AudioManager.saveSettings();
   }
 }

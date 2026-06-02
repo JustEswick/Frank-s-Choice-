@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { t, getLang, setLang } from '../utils/i18n.js';
 import UIButton from '../utils/UIButton.js';
+import VolumeButton from '../utils/VolumeButton.js';
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -55,11 +56,7 @@ export default class MenuScene extends Phaser.Scene {
       }
     });
 
-    this.add.text(100, height - 50, `♪ ${t('volume')}`, {
-      fontFamily: 'Inter',
-      fontSize: '14px',
-      color: '#7A6B5D'
-    }).setOrigin(0.5);
+    new VolumeButton(this, 100, height - 50);
 
     audioManager.playMusic('jazz-main');
   }

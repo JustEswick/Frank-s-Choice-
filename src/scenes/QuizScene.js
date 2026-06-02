@@ -170,6 +170,11 @@ export default class QuizScene extends Phaser.Scene {
   displayQuestion(question) {
     this.clearOptionButtons();
 
+    if (this.typewriterTimer) {
+      this.typewriterTimer.remove();
+      this.typewriterTimer = null;
+    }
+
     const { width, height } = this.cameras.main;
 
     const questionText = question.text.es || question.text.en;
@@ -200,7 +205,8 @@ export default class QuizScene extends Phaser.Scene {
         strokeColor: 0xB8860B,
         textColor: '#4A3728',
         fontSize: '15px',
-        depth: 50
+        depth: 50,
+        callback: () => this.selectAnswer(option)
       });
 
       btn.bg.setAlpha(0);
@@ -212,12 +218,6 @@ export default class QuizScene extends Phaser.Scene {
         duration: 200,
         delay: i * 80
       });
-
-      const originalCallback = btn.callback;
-      btn.callback = () => {
-        originalCallback();
-        this.selectAnswer(option);
-      };
 
       this.optionButtons.push(btn);
     });
