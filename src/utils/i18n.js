@@ -26,7 +26,8 @@ const translations = {
       inferior: 'Inferior',
       calzado: 'Calzado',
       accesorio: 'Accesorio',
-      capa: 'Capa'
+      capa: 'Capa',
+      conjunto: 'Conjunto'
     },
     frank_intro: '¡Hola! Soy Frank. ¡Vísteme para esta ocasión!',
     frank_confident: '¡Me siento genial con este outfit!',
@@ -52,7 +53,13 @@ const translations = {
       reloj: 'Reloj',
       gafas_sol: 'Gafas de Sol',
       abrigo: 'Abrigo',
-      chaleco: 'Chaleco'
+      chaleco: 'Chaleco',
+      vestido_formal: 'Vestido Formal',
+      vestido_casual: 'Vestido Casual',
+      blusa_seda: 'Blusa de Seda',
+      blusa_casual: 'Blusa Casual',
+      tacones_vestir: 'Tacones de Vestir',
+      tacones_casual: 'Tacones Casuales'
     }
   },
   en: {
@@ -80,7 +87,8 @@ const translations = {
       inferior: 'Bottom',
       calzado: 'Footwear',
       accesorio: 'Accessory',
-      capa: 'Layer'
+      capa: 'Layer',
+      conjunto: 'Outfit Set'
     },
     frank_intro: "Hi! I'm Frank. Dress me for this occasion!",
     frank_confident: 'I feel great with this outfit!',
@@ -106,7 +114,13 @@ const translations = {
       reloj: 'Watch',
       gafas_sol: 'Sunglasses',
       abrigo: 'Coat',
-      chaleco: 'Vest'
+      chaleco: 'Vest',
+      vestido_formal: 'Formal Dress',
+      vestido_casual: 'Casual Dress',
+      blusa_seda: 'Silk Blouse',
+      blusa_casual: 'Casual Blouse',
+      tacones_vestir: 'Dress Heels',
+      tacones_casual: 'Casual Heels'
     }
   }
 };

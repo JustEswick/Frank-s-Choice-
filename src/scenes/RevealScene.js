@@ -3,7 +3,7 @@ import { t } from '../utils/i18n.js';
 import PersistenceManager from '../systems/PersistenceManager.js';
 import UIButton from '../utils/UIButton.js';
 
-const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
+const CATEGORIES = ['superior', 'inferior', 'conjunto', 'calzado', 'accesorio', 'capa'];
 const REVEAL_DELAY = 800;
 const SFX_DELAY = 400;
 const SCORE_TWEEN_DURATION = 1500;
@@ -11,6 +11,7 @@ const BEIGE = 0xF5E6D3;
 const BROWN = 0x4A3728;
 const GREEN = 0x2E8B57;
 const RED = 0xCC3333;
+const MAX_POSSIBLE_SCORE = CATEGORIES.length * 20;
 
 export default class RevealScene extends Phaser.Scene {
   constructor() {
@@ -59,20 +60,20 @@ export default class RevealScene extends Phaser.Scene {
     this.categoryResults = {};
 
     CATEGORIES.forEach((cat, i) => {
-      const y = 110 + i * 80;
+      const y = 100 + i * 65;
       const catLabel = this.add.text(width / 2, y, t(`categories.${cat}`), {
         fontFamily: 'Inter',
-        fontSize: '13px',
+        fontSize: '12px',
         color: '#888888',
         fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      const playerSlot = this.createSlot(width * 0.25, y + 30, this.playerOutfit, cat);
-      const frankSlot = this.createSlot(width * 0.75, y + 30, this.frankOutfit, cat);
+      const playerSlot = this.createSlot(width * 0.25, y + 24, this.playerOutfit, cat);
+      const frankSlot = this.createSlot(width * 0.75, y + 24, this.frankOutfit, cat);
 
-      const resultText = this.add.text(width / 2, y + 30, '', {
+      const resultText = this.add.text(width / 2, y + 24, '', {
         fontFamily: 'Inter',
-        fontSize: '22px',
+        fontSize: '18px',
         fontStyle: 'bold'
       }).setOrigin(0.5).setAlpha(0);
 
@@ -194,6 +195,7 @@ export default class RevealScene extends Phaser.Scene {
   showScore() {
     const { width, height } = this.cameras.main;
     const totalScore = this.breakdown.reduce((sum, b) => sum + b.score, 0);
+    const finalPercent = Math.round((totalScore / MAX_POSSIBLE_SCORE) * 100);
 
     this.scoreLabel.setText(t('score'));
     this.tweens.add({
@@ -214,9 +216,9 @@ export default class RevealScene extends Phaser.Scene {
       delay: SCORE_TWEEN_DURATION / 100,
       repeat: 99,
       callback: () => {
-        current += totalScore / 100;
-        if (current >= totalScore) {
-          current = totalScore;
+        current += finalPercent / 100;
+        if (current >= finalPercent) {
+          current = finalPercent;
           timer.remove();
         }
         this.scoreText.setText(`${Math.round(current)}%`);
@@ -265,19 +267,20 @@ export default class RevealScene extends Phaser.Scene {
 
   saveRoundData() {
     const totalScore = this.breakdown.reduce((sum, b) => sum + b.score, 0);
+    const scorePercent = Math.round((totalScore / MAX_POSSIBLE_SCORE) * 100);
     const playerIds = this.playerOutfit.map(g => g.id);
     const frankIds = this.frankOutfit.map(g => g.id);
 
     const roundData = {
       date: new Date().toISOString(),
-      score: totalScore,
+      score: scorePercent,
       breakdown: this.breakdown,
       playerOutfit: playerIds,
       frankOutfit: frankIds
     };
 
     PersistenceManager.addRound(roundData);
-    PersistenceManager.updateProfile({ score: totalScore });
+    PersistenceManager.updateProfile({ score: scorePercent });
 
     if (this.recommendationEngine) {
       this.recommendationEngine.learnFromRound(playerIds, frankIds);

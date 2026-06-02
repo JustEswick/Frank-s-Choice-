@@ -3,14 +3,15 @@ import { t, getLang } from '../utils/i18n.js';
 import garmentsData from '../data/garments.json';
 import UIButton from '../utils/UIButton.js';
 
-const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
+const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa', 'conjunto'];
 
 const CATEGORY_OFFSETS = {
   superior: { x: 150, y: 100 },
   inferior: { x: 150, y: 200 },
   calzado: { x: 150, y: 380 },
   accesorio: { x: 180, y: 60 },
-  capa: { x: 150, y: 140 }
+  capa: { x: 150, y: 140 },
+  conjunto: { x: 150, y: 150 }
 };
 
 const CATEGORY_SCALES = {
@@ -18,7 +19,8 @@ const CATEGORY_SCALES = {
   inferior: 1,
   calzado: 0.8,
   accesorio: 0.7,
-  capa: 1.1
+  capa: 1.1,
+  conjunto: 1.3
 };
 
 export default class BuilderScene extends Phaser.Scene {
@@ -67,15 +69,15 @@ export default class BuilderScene extends Phaser.Scene {
 
   createTabs() {
     const { width, height } = this.cameras.main;
-    const tabWidth = 140;
+    const tabWidth = 110;
     const tabHeight = 40;
-    const startX = width / 2 - (CATEGORIES.length * (tabWidth + 8)) / 2 + tabWidth / 2;
+    const startX = width / 2 - (CATEGORIES.length * (tabWidth + 6)) / 2 + tabWidth / 2;
     const tabY = height - 40;
 
     this.tabButtons = [];
 
     CATEGORIES.forEach((cat, i) => {
-      const x = startX + i * (tabWidth + 8);
+      const x = startX + i * (tabWidth + 6);
       const isActive = cat === this.activeCategory;
 
       const btn = new UIButton(this, x, tabY, tabWidth, tabHeight, t(`categories.${cat}`), {
@@ -83,7 +85,7 @@ export default class BuilderScene extends Phaser.Scene {
         fillColor: isActive ? 0x2E8B57 : 0x8B7355,
         hoverColor: isActive ? 0x257045 : 0x7A6345,
         strokeColor: isActive ? 0x1A5C3A : 0x6B5335,
-        fontSize: '14px',
+        fontSize: '12px',
         depth: 100,
         callback: () => this.selectCategory(cat)
       });
@@ -99,11 +101,24 @@ export default class BuilderScene extends Phaser.Scene {
   }
 
   refreshTabs() {
+    const isConjuntoActive = !!this.outfit.conjunto;
+    const isSplitActive = !!this.outfit.superior || !!this.outfit.inferior;
+
     this.tabButtons.forEach(({ category, btn, fillColor }) => {
       const isActive = category === this.activeCategory;
-      const newFill = isActive ? 0x2E8B57 : 0x8B7355;
+      const isDisabled =
+        (category === 'superior' || category === 'inferior') && isConjuntoActive
+        || category === 'conjunto' && isSplitActive;
+
+      const newFill = isActive ? 0x2E8B57 : (isDisabled ? 0x666666 : 0x8B7355);
       btn.fillColor = newFill;
       btn.bg.setFillStyle(newFill);
+
+      if (isDisabled) {
+        btn.bg.disableInteractive();
+      } else {
+        btn.bg.setInteractive({ useHandCursor: true });
+      }
     });
   }
 
@@ -178,6 +193,34 @@ export default class BuilderScene extends Phaser.Scene {
   }
 
   selectGarment(garment) {
+    if (garment.category === 'conjunto') {
+      ['superior', 'inferior'].forEach(cat => {
+        if (this.mannequinGarments[cat]) {
+          const old = this.mannequinGarments[cat];
+          this.tweens.add({
+            targets: old.image,
+            alpha: 0,
+            duration: 200,
+            onComplete: () => old.image.destroy()
+          });
+          delete this.mannequinGarments[cat];
+          delete this.outfit[cat];
+        }
+      });
+    } else {
+      if (this.mannequinGarments.conjunto) {
+        const old = this.mannequinGarments.conjunto;
+        this.tweens.add({
+          targets: old.image,
+          alpha: 0,
+          duration: 200,
+          onComplete: () => old.image.destroy()
+        });
+        delete this.mannequinGarments.conjunto;
+        delete this.outfit.conjunto;
+      }
+    }
+
     if (this.mannequinGarments[garment.category]) {
       const old = this.mannequinGarments[garment.category];
       this.tweens.add({
@@ -220,6 +263,8 @@ export default class BuilderScene extends Phaser.Scene {
 
     this.outfit[garment.category] = garment;
     this.mannequinGarments[garment.category] = { garment, image: garmentImg };
+
+    this.refreshTabs();
   }
 
   createReadyButton() {
@@ -288,5 +333,6 @@ export default class BuilderScene extends Phaser.Scene {
     }
     delete this.outfit[this.activeCategory];
     this.updateThumbnails();
+    this.refreshTabs();
   }
 }

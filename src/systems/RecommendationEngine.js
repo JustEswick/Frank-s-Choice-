@@ -1,7 +1,7 @@
 import garmentsData from '../data/garments.json';
 import PersistenceManager from './PersistenceManager.js';
 
-const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
+const CATEGORIES = ['superior', 'inferior', 'conjunto', 'calzado', 'accesorio', 'capa'];
 
 const DEFAULT_WEIGHTS = {
   calor: 0,
@@ -12,6 +12,7 @@ const DEFAULT_WEIGHTS = {
   color_grupo: null,
   tono: null,
   textura: null,
+  conjunto_prefer: 0,
 };
 
 export default class RecommendationEngine {
@@ -40,6 +41,9 @@ export default class RecommendationEngine {
     if (w.color_grupo !== undefined) this.weights.color_grupo = w.color_grupo;
     if (w.tono !== undefined) this.weights.tono = w.tono;
     if (w.textura !== undefined) this.weights.textura = w.textura;
+    if (w.conjunto_prefer !== undefined) {
+      this.weights.conjunto_prefer = (this.weights.conjunto_prefer + w.conjunto_prefer) / 2;
+    }
   }
 
   calculateGarmentScore(garment) {
@@ -70,6 +74,18 @@ export default class RecommendationEngine {
     if (this.weights.textura) {
       const texturaScore = tags.textura.includes(this.weights.textura) ? 1 : 0;
       score += texturaScore;
+      factors++;
+    }
+
+    if (garment.category === 'conjunto') {
+      const conjuntoBoost = (this.weights.conjunto_prefer + 1) / 2;
+      score += conjuntoBoost;
+      factors++;
+    } else if (garment.category === 'superior' || garment.category === 'inferior') {
+      const piecePenalty = this.weights.conjunto_prefer > 0
+        ? (1 - (this.weights.conjunto_prefer + 1) / 2) * 0.5
+        : 0;
+      score += piecePenalty;
       factors++;
     }
 
@@ -113,15 +129,31 @@ export default class RecommendationEngine {
 
   getRecommendations(count = 1) {
     const results = {};
+    const allScored = [];
 
     for (const cat of CATEGORIES) {
       const catGarments = this.garments.filter(g => g.category === cat);
       const scored = catGarments.map(g => ({
         garment: g,
+        category: cat,
         score: this.calculateGarmentScore(g),
       }));
       scored.sort((a, b) => b.score - a.score);
+      allScored.push(...scored);
       results[cat] = scored.slice(0, count).map(s => s.garment);
+    }
+
+    const hasConjunto = results.conjunto && results.conjunto.length > 0
+      && this.weights.conjunto_prefer >= 0;
+    const hasSplitOutfit = (results.superior && results.superior.length > 0)
+      && (results.inferior && results.inferior.length > 0)
+      && this.weights.conjunto_prefer <= 0;
+
+    if (hasConjunto && this.weights.conjunto_prefer > 0.3) {
+      results.superior = [];
+      results.inferior = [];
+    } else if (hasSplitOutfit && this.weights.conjunto_prefer < -0.3) {
+      results.conjunto = [];
     }
 
     return results;

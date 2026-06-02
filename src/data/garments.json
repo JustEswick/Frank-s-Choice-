@@ -319,6 +319,102 @@
         "colores": ["negro", "azul", "gris"],
         "textura": ["tela", "lana"]
       }
+    },
+    {
+      "id": "vestido_formal",
+      "category": "conjunto",
+      "name": {
+        "es": "Vestido Formal",
+        "en": "Formal Dress"
+      },
+      "sprite": "assets/sprites/vestido_formal.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion"],
+        "formalidad": 0.95,
+        "clima": ["templado"],
+        "colores": ["negro", "azul", "rojo"],
+        "textura": ["seda", "tela"]
+      }
+    },
+    {
+      "id": "vestido_casual",
+      "category": "conjunto",
+      "name": {
+        "es": "Vestido Casual",
+        "en": "Casual Dress"
+      },
+      "sprite": "assets/sprites/vestido_casual.png",
+      "tags": {
+        "evento": ["casual", "fiesta", "playa"],
+        "formalidad": 0.4,
+        "clima": ["calor", "templado"],
+        "colores": ["blanco", "beige", "rosa"],
+        "textura": ["algodon", "lino"]
+      }
+    },
+    {
+      "id": "blusa_seda",
+      "category": "superior",
+      "name": {
+        "es": "Blusa de Seda",
+        "en": "Silk Blouse"
+      },
+      "sprite": "assets/sprites/blusa_seda.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "fiesta"],
+        "formalidad": 0.85,
+        "clima": ["templado"],
+        "colores": ["blanco", "negro", "beige"],
+        "textura": ["seda"]
+      }
+    },
+    {
+      "id": "blusa_casual",
+      "category": "superior",
+      "name": {
+        "es": "Blusa Casual",
+        "en": "Casual Blouse"
+      },
+      "sprite": "assets/sprites/blusa_casual.png",
+      "tags": {
+        "evento": ["casual", "fiesta"],
+        "formalidad": 0.3,
+        "clima": ["calor", "templado"],
+        "colores": ["blanco", "rosa", "azul"],
+        "textura": ["algodon"]
+      }
+    },
+    {
+      "id": "tacones_vestir",
+      "category": "calzado",
+      "name": {
+        "es": "Tacones de Vestir",
+        "en": "Dress Heels"
+      },
+      "sprite": "assets/sprites/tacones_vestir.png",
+      "tags": {
+        "evento": ["boda", "trabajo", "graduacion", "fiesta"],
+        "formalidad": 0.95,
+        "clima": ["templado"],
+        "colores": ["negro", "beige", "rojo"],
+        "textura": ["cuero"]
+      }
+    },
+    {
+      "id": "tacones_casual",
+      "category": "calzado",
+      "name": {
+        "es": "Tacones Casuales",
+        "en": "Casual Heels"
+      },
+      "sprite": "assets/sprites/tacones_casual.png",
+      "tags": {
+        "evento": ["casual", "fiesta"],
+        "formalidad": 0.5,
+        "clima": ["calor", "templado"],
+        "colores": ["beige", "negro", "blanco"],
+        "textura": ["cuero"]
+      }
     }
   ]
 }

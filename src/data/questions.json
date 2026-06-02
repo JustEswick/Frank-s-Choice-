@@ -495,6 +495,12 @@
           "priority_weight": 0.75
         },
         {
+          "id": "rosa",
+          "label": { "es": "Rosa", "en": "Pink" },
+          "weight": { "color_grupo": "caliente", "tono": "vibrante" },
+          "priority_weight": 0.7
+        },
+        {
           "id": "beige",
           "label": { "es": "Beige", "en": "Beige" },
           "weight": { "color_grupo": "neutro", "tono": "claro" },
@@ -601,6 +607,12 @@
           "label": { "es": "Rojo", "en": "Red" },
           "weight": { "color_grupo": "caliente" },
           "priority_weight": 0.7
+        },
+        {
+          "id": "fav_rosa",
+          "label": { "es": "Rosa", "en": "Pink" },
+          "weight": { "color_grupo": "caliente" },
+          "priority_weight": 0.65
         }
       ]
     },
@@ -951,6 +963,62 @@
           "label": { "es": "Estilo primero", "en": "Style first" },
           "weight": { "formalidad": 0.4 },
           "priority_weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": "pref_06",
+      "category": "preferencia",
+      "text": {
+        "es": "¿Prefieres conjuntos de una pieza o piezas combinables?",
+        "en": "Do you prefer one-piece outfits or mix-and-match pieces?"
+      },
+      "options": [
+        {
+          "id": "conjuntos",
+          "label": { "es": "Conjuntos de una pieza", "en": "One-piece outfits" },
+          "weight": { "conjunto_prefer": 1.0 },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "combinables",
+          "label": { "es": "Piezas combinables", "en": "Mix-and-match pieces" },
+          "weight": { "conjunto_prefer": -1.0 },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "ambos",
+          "label": { "es": "Ambos por igual", "en": "Both equally" },
+          "weight": { "conjunto_prefer": 0.0 },
+          "priority_weight": 0.6
+        }
+      ]
+    },
+    {
+      "id": "pref_07",
+      "category": "preferencia",
+      "text": {
+        "es": "¿Te gusta usar vestidos?",
+        "en": "Do you like wearing dresses?"
+      },
+      "options": [
+        {
+          "id": "vestido_si",
+          "label": { "es": "Sí, me encantan", "en": "Yes, I love them" },
+          "weight": { "conjunto_prefer": 0.8 },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "vestido_algunas",
+          "label": { "es": "A veces, según la ocasión", "en": "Sometimes, depending on the occasion" },
+          "weight": { "conjunto_prefer": 0.3 },
+          "priority_weight": 0.6
+        },
+        {
+          "id": "vestido_no",
+          "label": { "es": "No mucho", "en": "Not really" },
+          "weight": { "conjunto_prefer": -0.5 },
+          "priority_weight": 0.7
         }
       ]
     }
