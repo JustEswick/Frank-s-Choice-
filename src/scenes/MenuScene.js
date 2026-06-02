@@ -29,7 +29,7 @@ export default class MenuScene extends Phaser.Scene {
     new UIButton(this, width / 2, 320, 200, 60, t('play'), {
       sfx: 'click',
       fontSize: '28px',
-      callback: () => this.scene.start('BuilderScene')
+      callback: () => this.goToScene('BuilderScene')
     });
 
     new UIButton(this, width / 2, 400, 200, 50, t('history'), {
@@ -38,7 +38,7 @@ export default class MenuScene extends Phaser.Scene {
       hoverColor: 0xC4941A,
       strokeColor: 0xB8860B,
       fontSize: '22px',
-      callback: () => this.scene.start('HistoryScene')
+      callback: () => this.goToScene('HistoryScene')
     });
 
     new UIButton(this, width - 100, height - 50, 60, 30, getLang().toUpperCase(), {
@@ -62,5 +62,18 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     audioManager.playMusic('jazz-main');
+  }
+
+  goToScene(key) {
+    if (this.scene.get(key)) {
+      this.scene.start(key);
+      return;
+    }
+    import(`./${key}.js`)
+      .then((m) => {
+        this.scene.add(key, m.default, false);
+        this.scene.start(key);
+      })
+      .catch((err) => console.error(`Failed to load ${key}:`, err));
   }
 }

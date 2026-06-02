@@ -242,9 +242,20 @@ export default class BuilderScene extends Phaser.Scene {
     }));
     this.registry.set('playerOutfit', outfitArray);
     this.cameras.main.fadeOut(500, 74, 55, 40);
-    this.time.delayedCall(500, () => {
-      this.scene.start('QuizScene');
-    });
+    this.time.delayedCall(500, () => this.goToScene('QuizScene'));
+  }
+
+  goToScene(key) {
+    if (this.scene.get(key)) {
+      this.scene.start(key);
+      return;
+    }
+    import(`./${key}.js`)
+      .then((m) => {
+        this.scene.add(key, m.default, false);
+        this.scene.start(key);
+      })
+      .catch((err) => console.error(`Failed to load ${key}:`, err));
   }
 
   createRemoveButton() {

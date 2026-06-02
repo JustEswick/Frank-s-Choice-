@@ -96,12 +96,10 @@ export default class BootScene extends Phaser.Scene {
     AudioManager.preload(this);
   }
 
-  create() {
-    // Initialize audio
+  async create() {
     AudioManager.init(this);
     this.registry.set('audioManager', AudioManager);
 
-    // Frank animations
     this.anims.create({
       key: 'frank_idle',
       frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 1 }),
@@ -116,6 +114,14 @@ export default class BootScene extends Phaser.Scene {
       repeat: -1
     });
 
-    this.scene.start('MenuScene');
+    const { default: MenuScene } = await import('./MenuScene.js');
+    this.scene.add('MenuScene', MenuScene, true);
+
+    const otherScenes = ['BuilderScene', 'QuizScene', 'RevealScene', 'HistoryScene'];
+    otherScenes.forEach((key) => {
+      import(`./${key}.js`)
+        .then((m) => this.scene.add(key, m.default, false))
+        .catch((err) => console.error(`Failed to preload ${key}:`, err));
+    });
   }
 }

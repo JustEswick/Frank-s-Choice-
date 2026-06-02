@@ -1,10 +1,5 @@
 import Phaser from 'phaser';
 import BootScene from './scenes/BootScene.js';
-import MenuScene from './scenes/MenuScene.js';
-import BuilderScene from './scenes/BuilderScene.js';
-import QuizScene from './scenes/QuizScene.js';
-import RevealScene from './scenes/RevealScene.js';
-import HistoryScene from './scenes/HistoryScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -18,7 +13,9 @@ const config = {
     min: { width: 375, height: 667 },
     max: { width: 1920, height: 1080 }
   },
-  scene: [BootScene, MenuScene, BuilderScene, QuizScene, RevealScene, HistoryScene]
+  scene: [BootScene]
 };
 
 const game = new Phaser.Game(config);
+
+export default game;

@@ -226,12 +226,7 @@ export default class RevealScene extends Phaser.Scene {
       sfx: 'click',
       fontSize: '14px',
       depth: 50,
-      callback: () => {
-        this.cameras.main.fadeOut(500, 74, 55, 40);
-        this.time.delayedCall(500, () => {
-          this.scene.start('BuilderScene');
-        });
-      }
+      callback: () => this.goToBuilder()
     });
 
     this.historyBtn = new UIButton(this, width * 0.7, height - 40, 160, 40, t('history'), {
@@ -241,12 +236,7 @@ export default class RevealScene extends Phaser.Scene {
       strokeColor: 0x6B5335,
       fontSize: '14px',
       depth: 50,
-      callback: () => {
-        this.cameras.main.fadeOut(500, 74, 55, 40);
-        this.time.delayedCall(500, () => {
-          this.scene.start('HistoryScene');
-        });
-      }
+      callback: () => this.goToHistory()
     });
 
     this.playAgainBtn.setVisible(false);
@@ -287,5 +277,28 @@ export default class RevealScene extends Phaser.Scene {
     if (this.recommendationEngine) {
       this.recommendationEngine.learnFromRound(playerIds, frankIds);
     }
+  }
+
+  goToBuilder() {
+    this.cameras.main.fadeOut(500, 74, 55, 40);
+    this.time.delayedCall(500, () => this.goToScene('BuilderScene'));
+  }
+
+  goToHistory() {
+    this.cameras.main.fadeOut(500, 74, 55, 40);
+    this.time.delayedCall(500, () => this.goToScene('HistoryScene'));
+  }
+
+  goToScene(key) {
+    if (this.scene.get(key)) {
+      this.scene.start(key);
+      return;
+    }
+    import(`./${key}.js`)
+      .then((m) => {
+        this.scene.add(key, m.default, false);
+        this.scene.start(key);
+      })
+      .catch((err) => console.error(`Failed to load ${key}:`, err));
   }
 }
