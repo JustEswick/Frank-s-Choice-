@@ -5,8 +5,9 @@ import QuestionManager from '../systems/QuestionManager.js';
 import UIButton from '../utils/UIButton.js';
 
 const TYPEWRITER_DELAY = 30;
-const TYPEWRITER_SFX_INTERVAL = 120;
+const TYPEWRITER_SFX_INTERVAL = 400;
 const CONFIDENCE_THRESHOLD = 0.85;
+const MIN_QUESTIONS_BEFORE_END = 2;
 const INTRO_TEXT = 'frank_intro';
 
 export default class QuizScene extends Phaser.Scene {
@@ -17,6 +18,15 @@ export default class QuizScene extends Phaser.Scene {
   create() {
     const { width, height } = this.cameras.main;
     const audioManager = this.registry.get('audioManager');
+
+    if (this.typewriterTimer) {
+      this.typewriterTimer.remove();
+      this.typewriterTimer = null;
+    }
+    if (this.delayedCallTimer) {
+      this.delayedCallTimer.remove();
+      this.delayedCallTimer = null;
+    }
 
     this.questionManager = new QuestionManager();
     this.recommendationEngine = new RecommendationEngine();
@@ -147,8 +157,9 @@ export default class QuizScene extends Phaser.Scene {
 
   askNextQuestion() {
     const confidence = this.recommendationEngine.getConfidence();
+    const askedEnough = this.questionManager.getAskedCount() >= MIN_QUESTIONS_BEFORE_END;
 
-    if (confidence > CONFIDENCE_THRESHOLD) {
+    if (askedEnough && confidence > CONFIDENCE_THRESHOLD) {
       this.endQuiz();
       return;
     }

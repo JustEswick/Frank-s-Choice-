@@ -4,7 +4,8 @@ import PersistenceManager from '../systems/PersistenceManager.js';
 import UIButton from '../utils/UIButton.js';
 
 const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
-const REVEAL_DELAY = 300;
+const REVEAL_DELAY = 800;
+const SFX_DELAY = 400;
 const SCORE_TWEEN_DURATION = 1500;
 const BEIGE = 0xF5E6D3;
 const BROWN = 0x4A3728;
@@ -164,7 +165,7 @@ export default class RevealScene extends Phaser.Scene {
     const score = isMatch ? 20 : 0;
     this.breakdown.push({ category: cat, score, match: isMatch });
 
-    this.time.delayedCall(200, () => {
+    this.time.delayedCall(SFX_DELAY, () => {
       if (isMatch) {
         result.resultText.setText('\u2713');
         result.resultText.setColor('#' + GREEN.toString(16).padStart(6, '0'));
@@ -172,7 +173,6 @@ export default class RevealScene extends Phaser.Scene {
       } else {
         result.resultText.setText('\u2717');
         result.resultText.setColor('#' + RED.toString(16).padStart(6, '0'));
-        audioManager.playSFX('mismatch');
       }
 
       this.tweens.add({
