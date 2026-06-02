@@ -88,7 +88,7 @@ export default class RevealScene extends Phaser.Scene {
 
     this.createButtons();
     this.startReveal();
-    audioManager.playMusic('jazz-quiz');
+    audioManager.playSFX('reveal');
   }
 
   createSlot(x, y, outfitArray, category) {
@@ -167,11 +167,11 @@ export default class RevealScene extends Phaser.Scene {
       if (isMatch) {
         result.resultText.setText('\u2713');
         result.resultText.setColor('#' + GREEN.toString(16).padStart(6, '0'));
-        audioManager.playSFX('click');
+        audioManager.playSFX('match');
       } else {
         result.resultText.setText('\u2717');
         result.resultText.setColor('#' + RED.toString(16).padStart(6, '0'));
-        audioManager.playSFX('remove');
+        audioManager.playSFX('mismatch');
       }
 
       this.tweens.add({
