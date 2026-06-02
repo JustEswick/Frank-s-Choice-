@@ -15,6 +15,16 @@ export default class QuizScene extends Phaser.Scene {
     super({ key: 'QuizScene' });
   }
 
+  init() {
+    this._timers = [];
+  }
+
+  shutdown() {
+    if (this._timers) this._timers.forEach(t => t && t.remove());
+    this.tweens.killAll();
+    this.time.removeAllEvents();
+  }
+
   create() {
     const { width, height } = this.cameras.main;
     const audioManager = this.registry.get('audioManager');

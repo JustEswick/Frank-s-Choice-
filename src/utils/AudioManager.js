@@ -116,8 +116,18 @@ export default class AudioManager {
     const howl = AudioManager.sfx[name];
     if (howl) {
       howl.volume(AudioManager.sfxVolume * AudioManager.masterVolume);
+      const stack = new Error().stack;
+      const caller = stack ? stack.split('\n')[2]?.trim() || 'unknown' : 'unknown';
+      console.log(`[AUDIO] playSFX('${name}') @ ${Date.now()} | from: ${caller}`);
+      if (AudioManager._debugOverlay) {
+        AudioManager._debugOverlay(name);
+      }
       howl.play();
     }
+  }
+
+  static setDebugOverlay(fn) {
+    AudioManager._debugOverlay = fn;
   }
 
   static setMusicVolume(vol) {
