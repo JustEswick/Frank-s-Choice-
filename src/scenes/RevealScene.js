@@ -17,14 +17,7 @@ export default class RevealScene extends Phaser.Scene {
     super({ key: 'RevealScene' });
   }
 
-  init() {
-    this._timers = [];
-    this._tweens = [];
-  }
-
   shutdown() {
-    if (this._timers) this._timers.forEach(t => t && t.remove());
-    if (this._tweens) this._tweens.forEach(t => t && t.remove());
     this.tweens.killAll();
     this.time.removeAllEvents();
   }
