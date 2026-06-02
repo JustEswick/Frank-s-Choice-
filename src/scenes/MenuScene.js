@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { t, getLang, setLang } from '../utils/i18n.js';
+import UIButton from '../utils/UIButton.js';
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -25,49 +26,33 @@ export default class MenuScene extends Phaser.Scene {
       color: '#7A6B5D'
     }).setOrigin(0.5);
 
-    const playBtn = this.add.text(width / 2, 320, t('play'), {
-      fontFamily: 'Inter',
+    new UIButton(this, width / 2, 320, 200, 60, t('play'), {
+      sfx: 'click',
       fontSize: '28px',
-      color: '#FFFFFF',
-      backgroundColor: '#2E8B57',
-      padding: { x: 40, y: 15 }
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-    playBtn.on('pointerover', () => playBtn.setStyle({ backgroundColor: '#257045' }));
-    playBtn.on('pointerout', () => playBtn.setStyle({ backgroundColor: '#2E8B57' }));
-    playBtn.on('pointerdown', () => {
-      audioManager.playSFX('click');
-      this.scene.start('BuilderScene');
+      callback: () => this.scene.start('BuilderScene')
     });
 
-    const historyBtn = this.add.text(width / 2, 400, t('history'), {
-      fontFamily: 'Inter',
+    new UIButton(this, width / 2, 400, 200, 50, t('history'), {
+      sfx: 'click',
+      fillColor: 0xDAA520,
+      hoverColor: 0xC4941A,
+      strokeColor: 0xB8860B,
       fontSize: '22px',
-      color: '#4A3728',
-      backgroundColor: '#DAA520',
-      padding: { x: 30, y: 10 }
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-    historyBtn.on('pointerover', () => historyBtn.setStyle({ backgroundColor: '#C4941A' }));
-    historyBtn.on('pointerout', () => historyBtn.setStyle({ backgroundColor: '#DAA520' }));
-    historyBtn.on('pointerdown', () => {
-      audioManager.playSFX('click');
-      this.scene.start('HistoryScene');
+      callback: () => this.scene.start('HistoryScene')
     });
 
-    const langText = this.add.text(width - 100, height - 50, getLang().toUpperCase(), {
-      fontFamily: 'Inter',
+    new UIButton(this, width - 100, height - 50, 60, 30, getLang().toUpperCase(), {
+      sfx: 'click',
+      fillColor: 0xE8D5C0,
+      hoverColor: 0xD8C5B0,
+      strokeColor: 0xBBAA88,
+      textColor: '#4A3728',
       fontSize: '16px',
-      color: '#4A3728',
-      backgroundColor: '#E8D5C0',
-      padding: { x: 10, y: 5 }
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-    langText.on('pointerdown', () => {
-      const newLang = getLang() === 'es' ? 'en' : 'es';
-      setLang(newLang);
-      audioManager.playSFX('click');
-      this.scene.restart();
+      callback: () => {
+        const newLang = getLang() === 'es' ? 'en' : 'es';
+        setLang(newLang);
+        this.scene.restart();
+      }
     });
 
     this.add.text(100, height - 50, `♪ ${t('volume')}`, {
@@ -76,6 +61,6 @@ export default class MenuScene extends Phaser.Scene {
       color: '#7A6B5D'
     }).setOrigin(0.5);
 
-    audioManager.playMusic('main');
+    audioManager.playMusic('jazz-main');
   }
 }

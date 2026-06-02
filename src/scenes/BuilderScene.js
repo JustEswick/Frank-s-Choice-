@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { t, getLang } from '../utils/i18n.js';
 import garmentsData from '../data/garments.json';
+import UIButton from '../utils/UIButton.js';
 
 const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
 
@@ -32,11 +33,8 @@ export default class BuilderScene extends Phaser.Scene {
     this.outfit = {};
     this.activeCategory = CATEGORIES[0];
     this.mannequinGarments = {};
-    this.tabButtons = [];
     this.thumbnailButtons = [];
     this.thumbnailZones = [];
-    this.readyZone = null;
-    this.removeZone = null;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
 
@@ -64,82 +62,7 @@ export default class BuilderScene extends Phaser.Scene {
     this.createRemoveButton();
     this.updateThumbnails();
 
-    this.input.on('pointerdown', (pointer) => {
-      for (const zone of this.thumbnailZones) {
-        if (
-          pointer.x >= zone.x && pointer.x <= zone.x + zone.width &&
-          pointer.y >= zone.y && pointer.y <= zone.y + zone.height
-        ) {
-          audioManager.playSFX('select');
-          this.selectGarment(zone.garment);
-          this.updateThumbnails();
-          return;
-        }
-      }
-
-      for (const zone of this.tabZones) {
-        if (
-          pointer.x >= zone.x && pointer.x <= zone.x + zone.width &&
-          pointer.y >= zone.y && pointer.y <= zone.y + zone.height
-        ) {
-          audioManager.playSFX('click');
-          this.activeCategory = zone.category;
-          this.refreshTabs();
-          this.updateThumbnails();
-          return;
-        }
-      }
-
-      if (this.readyZone) {
-        const z = this.readyZone;
-        if (
-          pointer.x >= z.x && pointer.x <= z.x + z.width &&
-          pointer.y >= z.y && pointer.y <= z.y + z.height
-        ) {
-          if (Object.keys(this.outfit).length === 0) return;
-          audioManager.playSFX('transition');
-
-          const outfitArray = Object.values(this.outfit).map(g => ({
-            id: g.id,
-            category: g.category,
-            name: g.name,
-            tags: g.tags
-          }));
-          this.registry.set('playerOutfit', outfitArray);
-
-          this.cameras.main.fadeOut(500, 74, 55, 40);
-          this.time.delayedCall(500, () => {
-            this.scene.start('QuizScene');
-          });
-          return;
-        }
-      }
-
-      if (this.removeZone) {
-        const z = this.removeZone;
-        if (
-          pointer.x >= z.x && pointer.x <= z.x + z.width &&
-          pointer.y >= z.y && pointer.y <= z.y + z.height
-        ) {
-          if (!this.outfit[this.activeCategory]) return;
-          audioManager.playSFX('remove');
-
-          const entry = this.mannequinGarments[this.activeCategory];
-          if (entry) {
-            this.tweens.add({
-              targets: entry.image,
-              alpha: 0,
-              duration: 300,
-              onComplete: () => entry.image.destroy()
-            });
-            delete this.mannequinGarments[this.activeCategory];
-          }
-          delete this.outfit[this.activeCategory];
-          this.updateThumbnails();
-          return;
-        }
-      }
-    });
+    audioManager.playMusic('jazz-main');
   }
 
   createTabs() {
@@ -149,50 +72,38 @@ export default class BuilderScene extends Phaser.Scene {
     const startX = width / 2 - (CATEGORIES.length * (tabWidth + 8)) / 2 + tabWidth / 2;
     const tabY = height - 40;
 
-    this.tabZones = [];
+    this.tabButtons = [];
 
     CATEGORIES.forEach((cat, i) => {
       const x = startX + i * (tabWidth + 8);
+      const isActive = cat === this.activeCategory;
 
-      const bg = this.add.rectangle(x, tabY, tabWidth, tabHeight, 0x2E8B57)
-        .setStrokeStyle(2, 0x1A5C3A)
-        .setDepth(100);
-
-      const label = this.add.text(x, tabY, t(`categories.${cat}`), {
-        fontFamily: 'Inter',
+      const btn = new UIButton(this, x, tabY, tabWidth, tabHeight, t(`categories.${cat}`), {
+        sfx: 'click',
+        fillColor: isActive ? 0x2E8B57 : 0x8B7355,
+        hoverColor: isActive ? 0x257045 : 0x7A6345,
+        strokeColor: isActive ? 0x1A5C3A : 0x6B5335,
         fontSize: '14px',
-        color: '#FFFFFF',
-        fontStyle: 'bold'
-      }).setOrigin(0.5).setDepth(101);
-
-      if (cat !== this.activeCategory) {
-        bg.setFillStyle(0x8B7355);
-        bg.setStrokeStyle(2, 0x6B5335);
-      }
-
-      this.tabZones.push({
-        category: cat,
-        bg,
-        label,
-        x: x - tabWidth / 2,
-        y: tabY - tabHeight / 2,
-        width: tabWidth,
-        height: tabHeight
+        depth: 100,
+        callback: () => this.selectCategory(cat)
       });
 
-      this.tabButtons.push({ category: cat, bg, label });
+      this.tabButtons.push({ category: cat, btn, fillColor: isActive ? 0x2E8B57 : 0x8B7355 });
     });
   }
 
+  selectCategory(cat) {
+    this.activeCategory = cat;
+    this.refreshTabs();
+    this.updateThumbnails();
+  }
+
   refreshTabs() {
-    this.tabButtons.forEach(({ category, bg }) => {
-      if (category === this.activeCategory) {
-        bg.setFillStyle(0x2E8B57);
-        bg.setStrokeStyle(2, 0x1A5C3A);
-      } else {
-        bg.setFillStyle(0x8B7355);
-        bg.setStrokeStyle(2, 0x6B5335);
-      }
+    this.tabButtons.forEach(({ category, btn, fillColor }) => {
+      const isActive = category === this.activeCategory;
+      const newFill = isActive ? 0x2E8B57 : 0x8B7355;
+      btn.fillColor = newFill;
+      btn.bg.setFillStyle(newFill);
     });
   }
 
@@ -201,13 +112,11 @@ export default class BuilderScene extends Phaser.Scene {
   }
 
   updateThumbnails() {
-    const { width } = this.cameras.main;
-
     this.thumbnailZones = [];
-    this.thumbnailButtons.forEach(btn => {
-      btn.bg.destroy();
-      btn.label.destroy();
-      if (btn.thumbImg && btn.thumbImg.destroy) btn.thumbImg.destroy();
+    this.thumbnailButtons.forEach(({ bg, thumbImg, label }) => {
+      bg.destroy();
+      if (thumbImg && thumbImg.destroy) thumbImg.destroy();
+      label.destroy();
     });
     this.thumbnailButtons = [];
 
@@ -218,6 +127,8 @@ export default class BuilderScene extends Phaser.Scene {
     const startX = 30;
     const startY = 80;
 
+    const audioManager = this.registry.get('audioManager');
+
     filtered.forEach((garment, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
@@ -225,9 +136,11 @@ export default class BuilderScene extends Phaser.Scene {
       const y = startY + row * (thumbSize + padding + 16) + thumbSize / 2;
 
       const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
+      const isSelected = this.outfit[this.activeCategory]?.id === garment.id;
 
       const bg = this.add.rectangle(x, y, thumbSize, thumbSize, 0xE8D5C0)
-        .setStrokeStyle(2, this.outfit[this.activeCategory]?.id === garment.id ? 0x2E8B57 : 0xBBAA88)
+        .setStrokeStyle(2, isSelected ? 0x2E8B57 : 0xBBAA88)
+        .setInteractive({ useHandCursor: true })
         .setDepth(10);
 
       let thumbImg;
@@ -252,12 +165,12 @@ export default class BuilderScene extends Phaser.Scene {
         align: 'center'
       }).setOrigin(0.5, 0).setDepth(11);
 
-      this.thumbnailZones.push({
-        garment,
-        x: x - thumbSize / 2,
-        y: y - thumbSize / 2,
-        width: thumbSize,
-        height: thumbSize
+      bg.on('pointerover', () => bg.setFillStyle(0xF0E0D0));
+      bg.on('pointerout', () => bg.setFillStyle(0xE8D5C0));
+      bg.on('pointerdown', () => {
+        audioManager.playSFX('select');
+        this.selectGarment(garment);
+        this.updateThumbnails();
       });
 
       this.thumbnailButtons.push({ garment, bg, thumbImg, label: nameText });
@@ -311,51 +224,58 @@ export default class BuilderScene extends Phaser.Scene {
 
   createReadyButton() {
     const { width, height } = this.cameras.main;
-    const btnWidth = 140;
-    const btnHeight = 40;
-
-    this.add.rectangle(width - 100, height - 40, btnWidth, btnHeight, 0x2E8B57)
-      .setStrokeStyle(2, 0x1A5C3A)
-      .setDepth(100);
-
-    this.add.text(width - 100, height - 40, t('ready'), {
-      fontFamily: 'Inter',
+    this.readyBtn = new UIButton(this, width - 100, height - 40, 140, 40, t('ready'), {
+      sfx: 'transition',
       fontSize: '16px',
-      color: '#FFFFFF',
-      fontStyle: 'bold'
-    }).setOrigin(0.5).setDepth(101);
+      depth: 100,
+      callback: () => this.onReady()
+    });
+  }
 
-    this.readyZone = {
-      x: width - 100 - btnWidth / 2,
-      y: height - 40 - btnHeight / 2,
-      width: btnWidth,
-      height: btnHeight
-    };
+  onReady() {
+    if (Object.keys(this.outfit).length === 0) return;
+    const outfitArray = Object.values(this.outfit).map(g => ({
+      id: g.id,
+      category: g.category,
+      name: g.name,
+      tags: g.tags
+    }));
+    this.registry.set('playerOutfit', outfitArray);
+    this.cameras.main.fadeOut(500, 74, 55, 40);
+    this.time.delayedCall(500, () => {
+      this.scene.start('QuizScene');
+    });
   }
 
   createRemoveButton() {
     const { width } = this.cameras.main;
     const mx = width / 2;
-    const btnWidth = 160;
-    const btnHeight = 36;
-
-    this.add.rectangle(mx, this.mannequinY + 210, btnWidth, btnHeight, 0xAA4444)
-      .setStrokeStyle(2, 0x882222)
-      .setDepth(100);
-
     const removeLabel = getLang() === 'es' ? 'Quitar prenda' : 'Remove garment';
-    this.add.text(mx, this.mannequinY + 210, removeLabel, {
-      fontFamily: 'Inter',
-      fontSize: '13px',
-      color: '#FFFFFF',
-      fontStyle: 'bold'
-    }).setOrigin(0.5).setDepth(101);
 
-    this.removeZone = {
-      x: mx - btnWidth / 2,
-      y: this.mannequinY + 210 - btnHeight / 2,
-      width: btnWidth,
-      height: btnHeight
-    };
+    this.removeBtn = new UIButton(this, mx, this.mannequinY + 210, 160, 36, removeLabel, {
+      sfx: 'remove',
+      fillColor: 0xAA4444,
+      hoverColor: 0x883333,
+      strokeColor: 0x882222,
+      fontSize: '13px',
+      depth: 100,
+      callback: () => this.onRemove()
+    });
+  }
+
+  onRemove() {
+    if (!this.outfit[this.activeCategory]) return;
+    const entry = this.mannequinGarments[this.activeCategory];
+    if (entry) {
+      this.tweens.add({
+        targets: entry.image,
+        alpha: 0,
+        duration: 300,
+        onComplete: () => entry.image.destroy()
+      });
+      delete this.mannequinGarments[this.activeCategory];
+    }
+    delete this.outfit[this.activeCategory];
+    this.updateThumbnails();
   }
 }

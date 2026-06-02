@@ -2,8 +2,10 @@ import Phaser from 'phaser';
 import { t } from '../utils/i18n.js';
 import RecommendationEngine from '../systems/RecommendationEngine.js';
 import QuestionManager from '../systems/QuestionManager.js';
+import UIButton from '../utils/UIButton.js';
 
 const TYPEWRITER_DELAY = 30;
+const TYPEWRITER_SFX_INTERVAL = 120;
 const CONFIDENCE_THRESHOLD = 0.85;
 const INTRO_TEXT = 'frank_intro';
 
@@ -22,6 +24,7 @@ export default class QuizScene extends Phaser.Scene {
     this.optionButtons = [];
     this.isTypewriting = false;
     this.typewriterTimer = null;
+    this.lastTypewriterSfx = 0;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
 
@@ -108,6 +111,7 @@ export default class QuizScene extends Phaser.Scene {
     this.isTypewriting = true;
     this.dialogueText.setText('');
     this.frank.setTexture('frank_talk');
+    this.lastTypewriterSfx = 0;
 
     let index = 0;
     this.typewriterTimer = this.time.addEvent({
@@ -115,8 +119,11 @@ export default class QuizScene extends Phaser.Scene {
       repeat: text.length - 1,
       callback: () => {
         this.dialogueText.text += text[index];
-        if (index % 3 === 0) {
+
+        const now = this.time.now;
+        if (now - this.lastTypewriterSfx >= TYPEWRITER_SFX_INTERVAL) {
           audioManager.playSFX('typewriter');
+          this.lastTypewriterSfx = now;
         }
         index++;
 
@@ -173,7 +180,6 @@ export default class QuizScene extends Phaser.Scene {
 
   showOptions(question) {
     const { width, height } = this.cameras.main;
-    const audioManager = this.registry.get('audioManager');
     const lang = this.registry.get('lang') || 'es';
 
     const startY = height - 200;
@@ -185,43 +191,40 @@ export default class QuizScene extends Phaser.Scene {
     question.options.forEach((option, i) => {
       const y = startY - (question.options.length - 1 - i) * (optionHeight + optionGap);
 
-      const bg = this.add.rectangle(optionX, y, optionWidth, optionHeight, 0xDAA520)
-        .setStrokeStyle(2, 0xB8860B)
-        .setInteractive({ useHandCursor: true })
-        .setAlpha(0);
-
       const label = option.label[lang] || option.label.es;
 
-      const text = this.add.text(optionX, y, label, {
-        fontFamily: 'Inter',
+      const btn = new UIButton(this, optionX, y, optionWidth, optionHeight, label, {
+        sfx: 'click',
+        fillColor: 0xDAA520,
+        hoverColor: 0xC4941A,
+        strokeColor: 0xB8860B,
+        textColor: '#4A3728',
         fontSize: '15px',
-        color: '#4A3728',
-        fontStyle: 'bold'
-      }).setOrigin(0.5).setAlpha(0);
+        depth: 50
+      });
+
+      btn.bg.setAlpha(0);
+      btn.label.setAlpha(0);
 
       this.tweens.add({
-        targets: [bg, text],
+        targets: [btn.bg, btn.label],
         alpha: 1,
         duration: 200,
         delay: i * 80
       });
 
-      bg.on('pointerover', () => bg.setFillStyle(0xC4941A));
-      bg.on('pointerout', () => bg.setFillStyle(0xDAA520));
-      bg.on('pointerdown', () => {
-        audioManager.playSFX('click');
+      const originalCallback = btn.callback;
+      btn.callback = () => {
+        originalCallback();
         this.selectAnswer(option);
-      });
+      };
 
-      this.optionButtons.push({ bg, text });
+      this.optionButtons.push(btn);
     });
   }
 
   clearOptionButtons() {
-    this.optionButtons.forEach(({ bg, text }) => {
-      bg.destroy();
-      text.destroy();
-    });
+    this.optionButtons.forEach(btn => btn.destroy());
     this.optionButtons = [];
   }
 

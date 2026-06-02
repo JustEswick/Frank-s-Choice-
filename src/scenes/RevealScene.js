@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { t } from '../utils/i18n.js';
 import PersistenceManager from '../systems/PersistenceManager.js';
+import UIButton from '../utils/UIButton.js';
 
 const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa'];
 const REVEAL_DELAY = 300;
@@ -220,61 +221,51 @@ export default class RevealScene extends Phaser.Scene {
 
   createButtons() {
     const { width, height } = this.cameras.main;
-    const audioManager = this.registry.get('audioManager');
 
-    const playAgainBg = this.add.rectangle(width * 0.3, height - 40, 160, 40, GREEN)
-      .setStrokeStyle(2, 0x1A5C3A)
-      .setInteractive({ useHandCursor: true })
-      .setAlpha(0);
-
-    const playAgainText = this.add.text(width * 0.3, height - 40, t('play_again'), {
-      fontFamily: 'Inter',
+    this.playAgainBtn = new UIButton(this, width * 0.3, height - 40, 160, 40, t('play_again'), {
+      sfx: 'click',
       fontSize: '14px',
-      color: '#FFFFFF',
-      fontStyle: 'bold'
-    }).setOrigin(0.5).setAlpha(0);
-
-    playAgainBg.on('pointerdown', () => {
-      audioManager.playSFX('click');
-      this.cameras.main.fadeOut(500, 74, 55, 40);
-      this.time.delayedCall(500, () => {
-        this.scene.start('BuilderScene');
-      });
+      depth: 50,
+      callback: () => {
+        this.cameras.main.fadeOut(500, 74, 55, 40);
+        this.time.delayedCall(500, () => {
+          this.scene.start('BuilderScene');
+        });
+      }
     });
-    playAgainBg.on('pointerover', () => playAgainBg.setFillStyle(0x257045));
-    playAgainBg.on('pointerout', () => playAgainBg.setFillStyle(GREEN));
 
-    const historyBg = this.add.rectangle(width * 0.7, height - 40, 160, 40, 0x8B7355)
-      .setStrokeStyle(2, 0x6B5335)
-      .setInteractive({ useHandCursor: true })
-      .setAlpha(0);
-
-    const historyText = this.add.text(width * 0.7, height - 40, t('history'), {
-      fontFamily: 'Inter',
+    this.historyBtn = new UIButton(this, width * 0.7, height - 40, 160, 40, t('history'), {
+      sfx: 'click',
+      fillColor: 0x8B7355,
+      hoverColor: 0x7A6345,
+      strokeColor: 0x6B5335,
       fontSize: '14px',
-      color: '#FFFFFF',
-      fontStyle: 'bold'
-    }).setOrigin(0.5).setAlpha(0);
-
-    historyBg.on('pointerdown', () => {
-      audioManager.playSFX('click');
-      this.cameras.main.fadeOut(500, 74, 55, 40);
-      this.time.delayedCall(500, () => {
-        this.scene.start('HistoryScene');
-      });
+      depth: 50,
+      callback: () => {
+        this.cameras.main.fadeOut(500, 74, 55, 40);
+        this.time.delayedCall(500, () => {
+          this.scene.start('HistoryScene');
+        });
+      }
     });
-    historyBg.on('pointerover', () => historyBg.setFillStyle(0x7A6345));
-    historyBg.on('pointerout', () => historyBg.setFillStyle(0x8B7355));
+
+    this.playAgainBtn.setVisible(false);
+    this.historyBtn.setVisible(false);
 
     this.tweens.add({
-      targets: [playAgainBg, playAgainText, historyBg, historyText],
+      targets: [this.playAgainBtn.bg, this.playAgainBtn.label, this.historyBtn.bg, this.historyBtn.label],
       alpha: 1,
       duration: 400,
-      delay: CATEGORIES.length * REVEAL_DELAY + 600
+      delay: CATEGORIES.length * REVEAL_DELAY + 600,
+      onStart: () => {
+        this.playAgainBtn.setVisible(true);
+        this.historyBtn.setVisible(true);
+        this.playAgainBtn.bg.setAlpha(0);
+        this.playAgainBtn.label.setAlpha(0);
+        this.historyBtn.bg.setAlpha(0);
+        this.historyBtn.label.setAlpha(0);
+      }
     });
-
-    this.playAgainBtn = { bg: playAgainBg, text: playAgainText };
-    this.historyBtn = { bg: historyBg, text: historyText };
   }
 
   saveRoundData() {
