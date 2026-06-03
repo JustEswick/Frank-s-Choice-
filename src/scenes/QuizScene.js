@@ -3,6 +3,7 @@ import { t } from '../utils/i18n.js';
 import RecommendationEngine from '../systems/RecommendationEngine.js';
 import QuestionManager from '../systems/QuestionManager.js';
 import UIButton from '../utils/UIButton.js';
+import VolumeControl from '../utils/VolumeControl.js';
 
 const TYPEWRITER_DELAY = 30;
 const TYPEWRITER_SFX_INTERVAL = 400;
@@ -41,65 +42,85 @@ export default class QuizScene extends Phaser.Scene {
     this.typewriterTimer = null;
     this.lastTypewriterSfx = 0;
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
+    this.add.image(0, 0, 'bg-quiz').setOrigin(0, 0).setDisplaySize(width, height);
 
-    this.frank = this.add.image(150, height / 2 - 60, 'frank_idle');
-    this.frank.setDisplaySize(this.frank.width * 1.5, this.frank.height * 1.5);
+    this.volumeControl = new VolumeControl(this, width - 36, 36, { depth: 90 });
 
-    this.outfitDisplayContainer = this.add.container(width - 120, height / 2 - 80);
+    // Frank: Anchored to the bottom center, moved down to prevent floating, scaled up, moved left, with ChromaKey.
+    this.frank = this.add.sprite(width / 2 - 120, height + 140, 'frank-idle');
+    this.frank.setOrigin(0.5, 1);
+    this.frank.setScale(1.6); // Gran tamaño
+    this.frank.setPostPipeline('ChromaKeyPipeline');
+    this.frank.setDepth(5);
+
+    this.outfitDisplayContainer = this.add.container(width - 100, 90);
     this.showPlayerOutfit();
 
     this.dialogueBg = this.add.rectangle(
-      width / 2, height - 70, width * 0.9, 120, 0x4A3728, 0.9
-    ).setStrokeStyle(2, 0xDAA520);
+      width / 2, height - 50, width * 0.85, 80, 0x4A3728, 0.9
+    ).setStrokeStyle(2, 0xDAA520).setDepth(10);
 
-    this.dialogueText = this.add.text(width / 2, height - 110, '', {
+    this.dialogueText = this.add.text(width / 2, height - 50, '', {
       fontFamily: 'Inter',
       fontSize: '18px',
       color: '#F5E6D3',
-      wordWrap: { width: width * 0.82 },
+      wordWrap: { width: width * 0.75 },
       lineSpacing: 6,
       align: 'center'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(11);
 
-    this.progressBg = this.add.rectangle(width - 90, height - 30, 120, 10, 0x888888);
+    const barWidth = 200;
+    const barX = width / 2;
+    const barY = 30;
+
+    this.progressBg = this.add.rectangle(barX, barY, barWidth, 14, 0x2A1F18, 0.8)
+        .setStrokeStyle(2, 0xDAA520).setDepth(20);
     this.progressFill = this.add.rectangle(
-      width - 150, height - 30, 0, 10, 0x2E8B57
-    ).setOrigin(0, 0.5);
-    this.progressText = this.add.text(width - 90, height - 50, '0/30', {
+      barX - barWidth / 2 + 2, barY, 0, 10, 0x2E8B57
+    ).setOrigin(0, 0.5).setDepth(21);
+    this.progressText = this.add.text(barX, barY + 22, '0/30', {
       fontFamily: 'Inter',
-      fontSize: '12px',
-      color: '#4A3728'
-    }).setOrigin(0.5);
+      fontSize: '14px',
+      color: '#FFF8E7',
+      stroke: '#4A3728',
+      strokeThickness: 2,
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(21);
 
     audioManager.playMusic('jazz-quiz');
 
-    this.showIntro();
+    this.frank.play('frank_intro');
+    this.frank.once('animationcomplete-frank_intro', () => {
+      this.frank.play('frank_writing');
+      this.showIntro();
+    });
   }
 
   showPlayerOutfit() {
     const playerOutfit = this.registry.get('playerOutfit') || [];
     this.outfitDisplayContainer.removeAll(true);
 
-    const label = this.add.text(0, -120, t('your_outfit'), {
-      fontFamily: 'Inter',
-      fontSize: '14px',
-      color: '#4A3728',
+    const label = this.add.text(0, -10, t('your_outfit'), {
+      fontFamily: 'Playfair Display',
+      fontSize: '18px',
+      color: '#FFF8E7',
+      stroke: '#4A3728',
+      strokeThickness: 3,
       fontStyle: 'bold'
     }).setOrigin(0.5);
     this.outfitDisplayContainer.add(label);
 
     playerOutfit.forEach((garment, i) => {
-      const y = i * 55 - 60;
+      const y = 40 + i * 52;
       const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
 
-      const bg = this.add.rectangle(0, y, 80, 45, 0xE8D5C0)
+      const bg = this.add.rectangle(0, y, 80, 42, 0xE8D5C0)
         .setStrokeStyle(1, 0xBBAA88);
 
       let img;
       if (this.textures.exists(spriteKey)) {
         img = this.add.image(0, y, spriteKey);
-        img.setDisplaySize(70, 38);
+        img.setDisplaySize(70, 36);
       } else {
         img = this.add.text(0, y, garment.name.es.charAt(0), {
           fontFamily: 'Inter',
@@ -125,7 +146,6 @@ export default class QuizScene extends Phaser.Scene {
     const audioManager = this.registry.get('audioManager');
     this.isTypewriting = true;
     this.dialogueText.setText('');
-    this.frank.setTexture('frank_talk');
     this.lastTypewriterSfx = 0;
 
     let index = 0;
@@ -144,7 +164,6 @@ export default class QuizScene extends Phaser.Scene {
 
         if (index >= text.length) {
           this.isTypewriting = false;
-          this.frank.setTexture('frank_idle');
           if (onComplete) onComplete();
         }
       }
@@ -157,7 +176,6 @@ export default class QuizScene extends Phaser.Scene {
     }
     this.dialogueText.setText(text);
     this.isTypewriting = false;
-    this.frank.setTexture('frank_idle');
   }
 
   askNextQuestion() {
@@ -203,14 +221,14 @@ export default class QuizScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     const lang = this.registry.get('lang') || 'es';
 
-    const startY = height - 200;
-    const optionHeight = 36;
-    const optionGap = 8;
+    const optionHeight = 38;
+    const optionGap = 10;
     const optionWidth = 260;
-    const optionX = width / 2;
+    const optionX = 950;
+    const startY = 200;
 
     question.options.forEach((option, i) => {
-      const y = startY - (question.options.length - 1 - i) * (optionHeight + optionGap);
+      const y = startY + i * (optionHeight + optionGap);
 
       const label = option.label[lang] || option.label.es;
 
@@ -220,7 +238,7 @@ export default class QuizScene extends Phaser.Scene {
         hoverColor: 0xC4941A,
         strokeColor: 0xB8860B,
         textColor: '#4A3728',
-        fontSize: '15px',
+        fontSize: '16px',
         depth: 50,
         callback: () => this.selectAnswer(option)
       });
@@ -255,7 +273,7 @@ export default class QuizScene extends Phaser.Scene {
     const total = this.questionManager.getTotal();
     const progress = asked / total;
 
-    this.progressFill.setSize(120 * progress, 10);
+    this.progressFill.setSize(196 * progress, 10);
     this.progressText.setText(`${asked}/${total}`);
   }
 
@@ -277,22 +295,16 @@ export default class QuizScene extends Phaser.Scene {
     this.registry.set('recommendationEngine', this.recommendationEngine);
 
     this.typewriteText(t('frank_confident'), () => {
-      audioManager.playSFX('transition');
-      this.cameras.main.fadeOut(500, 74, 55, 40);
-      this.time.delayedCall(500, () => this.goToScene('RevealScene'));
+      this.frank.play('frank_close');
+      this.frank.once('animationcomplete-frank_close', () => {
+        audioManager.playSFX('transition');
+        this.cameras.main.fadeOut(500, 74, 55, 40);
+        this.time.delayedCall(500, () => this.goToScene('RevealScene'));
+      });
     });
   }
 
   goToScene(key) {
-    if (this.scene.get(key)) {
-      this.scene.start(key);
-      return;
-    }
-    import(`./${key}.js`)
-      .then((m) => {
-        this.scene.add(key, m.default, false);
-        this.scene.start(key);
-      })
-      .catch((err) => console.error(`Failed to load ${key}:`, err));
+    this.scene.start(key);
   }
 }

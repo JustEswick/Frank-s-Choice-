@@ -19,12 +19,14 @@ export default class HistoryScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     const audioManager = this.registry.get('audioManager');
 
-    this.add.rectangle(width / 2, height / 2, width, height, BEIGE);
+    this.add.image(0, 0, 'bg-menu').setOrigin(0, 0).setDisplaySize(width, height);
 
     this.add.text(width / 2, 40, 'HISTORIAL', {
       fontFamily: 'Playfair Display',
       fontSize: '42px',
-      color: '#4A3728',
+      color: '#F5E6D3',
+      stroke: '#4A3728',
+      strokeThickness: 5,
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
@@ -35,7 +37,9 @@ export default class HistoryScene extends Phaser.Scene {
     this.add.text(width / 2, 90, `${t('round')}: ${roundsPlayed}  |  ${t('score')}: ${avgScore}%`, {
       fontFamily: 'Inter',
       fontSize: '16px',
-      color: '#7A6B5D'
+      color: '#FFF8E7',
+      stroke: '#4A3728',
+      strokeThickness: 2
     }).setOrigin(0.5);
 
     const history = PersistenceManager.getHistory();

@@ -12,19 +12,23 @@ export default class MenuScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     const audioManager = this.registry.get('audioManager');
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
+    this.add.image(0, 0, 'bg-menu').setOrigin(0, 0).setDisplaySize(width, height);
 
     this.add.text(width / 2, 120, t('title'), {
       fontFamily: 'Playfair Display',
       fontSize: '52px',
-      color: '#4A3728',
+      color: '#F5E6D3',
+      stroke: '#4A3728',
+      strokeThickness: 5,
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
     this.add.text(width / 2, 180, t('subtitle'), {
       fontFamily: 'Inter',
       fontSize: '18px',
-      color: '#7A6B5D'
+      color: '#FFF8E7',
+      stroke: '#4A3728',
+      strokeThickness: 2
     }).setOrigin(0.5);
 
     new UIButton(this, width / 2, 320, 200, 60, t('play'), {
@@ -33,12 +37,12 @@ export default class MenuScene extends Phaser.Scene {
       callback: () => this.goToScene('BuilderScene')
     });
 
-    new UIButton(this, width / 2, 400, 200, 50, t('history'), {
+    new UIButton(this, width / 2, height / 2 + 90, 200, 40, t('history'), {
       sfx: 'click',
-      fillColor: 0xDAA520,
-      hoverColor: 0xC4941A,
-      strokeColor: 0xB8860B,
-      fontSize: '22px',
+      fillColor: 0x8B7355,
+      hoverColor: 0xA08A6B,
+      strokeColor: 0x5C4B37,
+      fontSize: '20px',
       callback: () => this.goToScene('HistoryScene')
     });
 
@@ -62,15 +66,6 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   goToScene(key) {
-    if (this.scene.get(key)) {
-      this.scene.start(key);
-      return;
-    }
-    import(`./${key}.js`)
-      .then((m) => {
-        this.scene.add(key, m.default, false);
-        this.scene.start(key);
-      })
-      .catch((err) => console.error(`Failed to load ${key}:`, err));
+    this.scene.start(key);
   }
 }

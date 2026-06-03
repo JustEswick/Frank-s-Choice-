@@ -21,12 +21,13 @@ export default class BootScene extends Phaser.Scene {
 
     const loadingText = this.add.text(
       width / 2,
-      height / 2 - 25,
+      height / 2 - 45,
       'Loading...',
       {
         fontFamily: 'Inter, sans-serif',
         fontSize: '20px',
-        color: '#ffffff'
+        color: '#4A3728',
+        fontStyle: 'bold'
       }
     );
     loadingText.setOrigin(0.5, 0.5);
@@ -38,7 +39,8 @@ export default class BootScene extends Phaser.Scene {
       {
         fontFamily: 'Inter, sans-serif',
         fontSize: '18px',
-        color: '#ffffff'
+        color: '#4A3728',
+        fontStyle: 'bold'
       }
     );
     percentText.setOrigin(0.5, 0.5);
@@ -57,16 +59,37 @@ export default class BootScene extends Phaser.Scene {
       percentText.destroy();
     });
 
-    // Frank sprites
+    // Backgrounds
+    this.load.image('bg-menu',    'assets/backgrounds/menu.png');
+    this.load.image('bg-builder', 'assets/backgrounds/builder.png');
+    this.load.image('bg-quiz',    'assets/backgrounds/quiz.png');
+    this.load.image('bg-reveal',  'assets/backgrounds/reveal.png');
+
+    // Frank sprites (mixed: vertical 320x568 for intro/writing/close, horizontal 320x180 for talk/idle)
     this.load.spritesheet('frank-idle', 'assets/frank/idle.png', {
-      frameWidth: 200,
-      frameHeight: 300,
-      frameMax: 2
+      frameWidth: 320,
+      frameHeight: 180,
+      frameMax: 56
     });
     this.load.spritesheet('frank-talk', 'assets/frank/talk.png', {
-      frameWidth: 200,
-      frameHeight: 300,
-      frameMax: 4
+      frameWidth: 320,
+      frameHeight: 180,
+      frameMax: 60
+    });
+    this.load.spritesheet('frank-intro', 'assets/frank/intro.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 82
+    });
+    this.load.spritesheet('frank-writing', 'assets/frank/writing.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 120
+    });
+    this.load.spritesheet('frank-close', 'assets/frank/close.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 82
     });
 
     // Mannequin
@@ -77,7 +100,9 @@ export default class BootScene extends Phaser.Scene {
       'camisa-formal', 'camiseta', 'polo', 'blazer', 'sueter',
       'pantalon-formal', 'jeans', 'bermudas', 'falda', 'pantalon-lino',
       'zapatos-vestir', 'mocasines', 'zapatillas', 'sandalias', 'botas',
-      'corbata', 'reloj', 'gafas-sol', 'abrigo', 'chaleco'
+      'corbata', 'reloj', 'gafas-sol', 'abrigo', 'chaleco',
+      'vestido-formal', 'vestido-casual', 'blusa-seda', 'blusa-casual',
+      'tacones-vestir', 'tacones-casual'
     ];
     garments.forEach((id) => {
       this.load.image(`garment_${id}`, `assets/garments/${id}.png`);
@@ -102,26 +127,39 @@ export default class BootScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'frank_idle',
-      frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 1 }),
-      frameRate: 2,
+      frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 55 }),
+      frameRate: 18,
       repeat: -1
     });
 
     this.anims.create({
       key: 'frank_talk',
-      frames: this.anims.generateFrameNumbers('frank-talk', { start: 0, end: 3 }),
-      frameRate: 8,
+      frames: this.anims.generateFrameNumbers('frank-talk', { start: 0, end: 59 }),
+      frameRate: 20,
       repeat: -1
     });
 
-    const { default: MenuScene } = await import('./MenuScene.js');
-    this.scene.add('MenuScene', MenuScene, true);
-
-    const otherScenes = ['BuilderScene', 'QuizScene', 'RevealScene', 'HistoryScene'];
-    otherScenes.forEach((key) => {
-      import(`./${key}.js`)
-        .then((m) => this.scene.add(key, m.default, false))
-        .catch((err) => console.error(`Failed to preload ${key}:`, err));
+    this.anims.create({
+      key: 'frank_intro',
+      frames: this.anims.generateFrameNumbers('frank-intro', { start: 0, end: 81 }),
+      frameRate: 24,
+      repeat: 0
     });
+
+    this.anims.create({
+      key: 'frank_writing',
+      frames: this.anims.generateFrameNumbers('frank-writing', { start: 0, end: 119 }),
+      frameRate: 24,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'frank_close',
+      frames: this.anims.generateFrameNumbers('frank-close', { start: 0, end: 81 }),
+      frameRate: 24,
+      repeat: 0
+    });
+
+    this.scene.start('MenuScene');
   }
 }

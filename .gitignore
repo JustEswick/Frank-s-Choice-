@@ -2,3 +2,9 @@ node_modules/
 dist/
 .DS_Store
 *.log
+
+# Protección de Propiedad Intelectual e Información Sensible
+garment_offsets.json
+scripts/
+*.ps1
+spirtesRopa/

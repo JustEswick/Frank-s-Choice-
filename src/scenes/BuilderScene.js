@@ -2,26 +2,10 @@ import Phaser from 'phaser';
 import { t, getLang } from '../utils/i18n.js';
 import garmentsData from '../data/garments.json';
 import UIButton from '../utils/UIButton.js';
+import VolumeControl from '../utils/VolumeControl.js';
+import { getGarmentOffsets } from '../data/garmentOffsets.js';
 
 const CATEGORIES = ['superior', 'inferior', 'calzado', 'accesorio', 'capa', 'conjunto'];
-
-const CATEGORY_OFFSETS = {
-  superior: { x: 150, y: 100 },
-  inferior: { x: 150, y: 200 },
-  calzado: { x: 150, y: 380 },
-  accesorio: { x: 180, y: 60 },
-  capa: { x: 150, y: 140 },
-  conjunto: { x: 150, y: 150 }
-};
-
-const CATEGORY_SCALES = {
-  superior: 1,
-  inferior: 1,
-  calzado: 0.8,
-  accesorio: 0.7,
-  capa: 1.1,
-  conjunto: 1.3
-};
 
 export default class BuilderScene extends Phaser.Scene {
   constructor() {
@@ -38,41 +22,51 @@ export default class BuilderScene extends Phaser.Scene {
     this.thumbnailButtons = [];
     this.thumbnailZones = [];
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0xF5E6D3);
+    this.add.image(0, 0, 'bg-builder').setOrigin(0, 0).setDisplaySize(width, height);
 
-    this.add.text(width / 2, 30, t('title'), {
-      fontFamily: 'Playfair Display',
-      fontSize: '36px',
-      color: '#4A3728',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
+    this.volumeControl = new VolumeControl(this, width - 36, 36, { depth: 90 });
+
+    // Title removed as requested
 
     const mannequinX = width / 2;
-    const mannequinY = height / 2 - 20;
+    const mannequinY = height / 2 + 25;
     this.mannequinX = mannequinX;
     this.mannequinY = mannequinY;
 
     this.mannequin = this.add.image(mannequinX, mannequinY, 'mannequin');
-    this.mannequin.setDisplaySize(300, 500);
+    this.mannequin.setDisplaySize(180, 525);
+    this.mannequin.setOrigin(0.5, 0.5);
     this.mannequin.setDepth(1);
 
     this.garmentDisplayContainer = this.add.container(0, 0);
+    this.garmentDisplayContainer.setDepth(5);
 
     this.createTabs();
     this.createThumbnailPanel();
     this.createReadyButton();
     this.createRemoveButton();
+    this.createExitButton();
     this.updateThumbnails();
+
+    // Nicer scale text bubble that fades out
+    this.debugText = this.add.text(width / 2, 100, '', {
+      fontFamily: 'Inter',
+      fontSize: '20px',
+      color: '#FFFFFF',
+      backgroundColor: '#000000AA',
+      padding: { x: 16, y: 8 },
+      fontStyle: 'bold'
+    }).setDepth(1000).setOrigin(0.5, 0.5).setAlpha(0);
 
     audioManager.playMusic('jazz-main');
   }
 
   createTabs() {
     const { width, height } = this.cameras.main;
-    const tabWidth = 110;
-    const tabHeight = 40;
+    const tabWidth = 100;
+    const tabHeight = 36;
     const startX = width / 2 - (CATEGORIES.length * (tabWidth + 6)) / 2 + tabWidth / 2;
-    const tabY = height - 40;
+    const tabY = height - 24;
 
     this.tabButtons = [];
 
@@ -136,19 +130,31 @@ export default class BuilderScene extends Phaser.Scene {
     this.thumbnailButtons = [];
 
     const filtered = garmentsData.garments.filter(g => g.category === this.activeCategory);
-    const thumbSize = 60;
-    const padding = 8;
-    const cols = 3;
-    const startX = 30;
-    const startY = 80;
+    const thumbSize = 80;
+    const labelH = 30;
+    const cellW = thumbSize;
+    const cellH = thumbSize + labelH + 12;
+    const hGap = 10;
+    const vGap = 12;
+    const panelX = 20;
+    const panelY = 90;
+    const panelW = 230;
+    const panelH = 600;
+
+    const cols = Math.min(filtered.length, 2);
+    const rows = Math.ceil(filtered.length / cols);
+    const gridW = cols * cellW + (cols - 1) * hGap;
+    const gridH = rows * (cellH - vGap);
+    const offsetX = panelX + (panelW - gridW) / 2;
+    const offsetY = panelY + (panelH - gridH) / 2;
 
     const audioManager = this.registry.get('audioManager');
 
     filtered.forEach((garment, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const x = startX + col * (thumbSize + padding) + thumbSize / 2;
-      const y = startY + row * (thumbSize + padding + 16) + thumbSize / 2;
+      const x = offsetX + col * (cellW + hGap) + cellW / 2;
+      const y = offsetY + row * cellH + cellW / 2;
 
       const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
       const isSelected = this.outfit[this.activeCategory]?.id === garment.id;
@@ -166,7 +172,7 @@ export default class BuilderScene extends Phaser.Scene {
       } else {
         thumbImg = this.add.text(x, y, garment.name.es.charAt(0), {
           fontFamily: 'Inter',
-          fontSize: '18px',
+          fontSize: '22px',
           color: '#4A3728',
           fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(11);
@@ -174,10 +180,13 @@ export default class BuilderScene extends Phaser.Scene {
 
       const nameText = this.add.text(x, y + thumbSize / 2 + 4, garment.name.es, {
         fontFamily: 'Inter',
-        fontSize: '9px',
-        color: '#4A3728',
-        wordWrap: { width: thumbSize + 10 },
-        align: 'center'
+        fontSize: '11px',
+        color: '#FFF8E7',
+        stroke: '#4A3728',
+        strokeThickness: 2,
+        wordWrap: { width: cellW },
+        align: 'center',
+        fontStyle: 'bold'
       }).setOrigin(0.5, 0).setDepth(11);
 
       bg.on('pointerover', () => bg.setFillStyle(0xF0E0D0));
@@ -232,17 +241,63 @@ export default class BuilderScene extends Phaser.Scene {
     }
 
     const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
-    const offset = CATEGORY_OFFSETS[garment.category] || { x: 150, y: 150 };
-    const scale = CATEGORY_SCALES[garment.category] || 1;
+    const perfectOffsets = getGarmentOffsets();
+    
+    let itemData = perfectOffsets[garment.id];
+    if (Array.isArray(itemData)) itemData = itemData[0]; // Use first variant as spawn default
+
+    const offset = itemData ? { x: itemData.x, y: itemData.y } : { x: 0, y: 0 };
+    const scale = itemData ? itemData.scale : 1.2;
+
+    const topLeftX = this.mannequinX + offset.x;
+    const topLeftY = this.mannequinY + offset.y;
 
     let garmentImg;
     if (this.textures.exists(spriteKey)) {
-      garmentImg = this.add.image(this.mannequinX + offset.x - 150, this.mannequinY + offset.y - 250, spriteKey);
-      garmentImg.setDisplaySize(300 * scale, 200 * scale);
+      garmentImg = this.add.image(topLeftX, topLeftY, spriteKey);
+      const categoryDepths = { calzado: 1, inferior: 2, superior: 3, conjunto: 3, accesorio: 4, capa: 5 };
+      garmentImg.setDepth(categoryDepths[garment.category] || 1);
+      
+      // Drag and scale feature for precise alignment
+      garmentImg.setInteractive({ draggable: true });
+      this.input.setDraggable(garmentImg);
+      
+      const showScale = (scale) => {
+        this.debugText.setText(`Escala: ${scale.toFixed(2)}x`);
+        this.debugText.setAlpha(1);
+        if (this.debugTextTimer) this.debugTextTimer.remove();
+        this.debugTextTimer = this.time.delayedCall(1500, () => {
+          this.tweens.add({ targets: this.debugText, alpha: 0, duration: 500 });
+        });
+      };
+
+      garmentImg.on('drag', (pointer, dragX, dragY) => {
+        garmentImg.x = dragX;
+        garmentImg.y = dragY;
+      });
+
+      let lastScaleTime = 0;
+      garmentImg.on('wheel', (pointer, dx, dy, dz) => {
+        const currentScale = garmentImg.scale;
+        const newScale = currentScale + (dy > 0 ? -0.05 : 0.05);
+        garmentImg.setScale(Math.max(0.1, newScale));
+        
+        showScale(garmentImg.scale);
+
+        const now = this.time.now;
+        if (now - lastScaleTime > 100) {
+          lastScaleTime = now;
+          this.time.delayedCall(50, () => {
+            const audioManager = this.registry.get('audioManager');
+            audioManager.playSFX('select');
+          });
+        }
+      });
+
     } else {
       const placeholder = this.add.rectangle(
-        this.mannequinX + offset.x - 150 + 100,
-        this.mannequinY + offset.y - 250 + 75,
+        topLeftX + 100,
+        topLeftY + 75,
         200 * scale,
         150 * scale,
         0xCCCCFF,
@@ -279,36 +334,33 @@ export default class BuilderScene extends Phaser.Scene {
 
   onReady() {
     if (Object.keys(this.outfit).length === 0) return;
-    const outfitArray = Object.values(this.outfit).map(g => ({
-      id: g.id,
-      category: g.category,
-      name: g.name,
-      tags: g.tags
-    }));
+    const outfitArray = Object.values(this.outfit).map(g => {
+      const entry = this.mannequinGarments[g.category];
+      const customOffset = entry && entry.image ? { x: entry.image.x - this.mannequinX, y: entry.image.y - this.mannequinY } : null;
+      const customScale = entry && entry.image ? entry.image.scale : null;
+      return {
+        id: g.id,
+        category: g.category,
+        name: g.name,
+        tags: g.tags,
+        customOffset,
+        customScale
+      };
+    });
     this.registry.set('playerOutfit', outfitArray);
     this.cameras.main.fadeOut(500, 74, 55, 40);
     this.time.delayedCall(500, () => this.goToScene('QuizScene'));
   }
 
   goToScene(key) {
-    if (this.scene.get(key)) {
-      this.scene.start(key);
-      return;
-    }
-    import(`./${key}.js`)
-      .then((m) => {
-        this.scene.add(key, m.default, false);
-        this.scene.start(key);
-      })
-      .catch((err) => console.error(`Failed to load ${key}:`, err));
+    this.scene.start(key);
   }
 
   createRemoveButton() {
-    const { width } = this.cameras.main;
-    const mx = width / 2;
+    const { width, height } = this.cameras.main;
     const removeLabel = getLang() === 'es' ? 'Quitar prenda' : 'Remove garment';
 
-    this.removeBtn = new UIButton(this, mx, this.mannequinY + 210, 160, 36, removeLabel, {
+    this.removeBtn = new UIButton(this, width - 100, height - 90, 160, 32, removeLabel, {
       sfx: 'remove',
       fillColor: 0xAA4444,
       hoverColor: 0x883333,
@@ -316,6 +368,20 @@ export default class BuilderScene extends Phaser.Scene {
       fontSize: '13px',
       depth: 100,
       callback: () => this.onRemove()
+    });
+  }
+
+  createExitButton() {
+    const exitLabel = getLang() === 'es' ? 'Salir' : 'Exit';
+    
+    this.exitBtn = new UIButton(this, 90, 40, 120, 32, exitLabel, {
+      sfx: 'click',
+      fillColor: 0x8B7355,
+      hoverColor: 0x7A6345,
+      strokeColor: 0x6B5335,
+      fontSize: '14px',
+      depth: 100,
+      callback: () => this.scene.start('MenuScene')
     });
   }
 
