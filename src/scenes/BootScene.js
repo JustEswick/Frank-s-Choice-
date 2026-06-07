@@ -69,27 +69,42 @@ export default class BootScene extends Phaser.Scene {
     this.load.spritesheet('frank-idle', 'assets/frank/idle.png', {
       frameWidth: 320,
       frameHeight: 180,
-      frameMax: 56
+      frameMax: 70
     });
     this.load.spritesheet('frank-talk', 'assets/frank/talk.png', {
       frameWidth: 320,
       frameHeight: 180,
-      frameMax: 60
+      frameMax: 75
     });
     this.load.spritesheet('frank-intro', 'assets/frank/intro.png', {
       frameWidth: 320,
       frameHeight: 568,
-      frameMax: 82
+      frameMax: 103
     });
     this.load.spritesheet('frank-writing', 'assets/frank/writing.png', {
       frameWidth: 320,
       frameHeight: 568,
-      frameMax: 120
+      frameMax: 87
     });
     this.load.spritesheet('frank-close', 'assets/frank/close.png', {
       frameWidth: 320,
       frameHeight: 568,
-      frameMax: 82
+      frameMax: 103
+    });
+    this.load.spritesheet('frank-duda', 'assets/frank/duda.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 131
+    });
+    this.load.spritesheet('frank-enojado', 'assets/frank/enojado.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 31
+    });
+    this.load.spritesheet('frank-tiralibreta', 'assets/frank/tiralibreta.png', {
+      frameWidth: 320,
+      frameHeight: 568,
+      frameMax: 104
     });
 
     // Mannequin
@@ -127,35 +142,56 @@ export default class BootScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'frank_idle',
-      frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 55 }),
+      frames: this.anims.generateFrameNumbers('frank-idle', { start: 0, end: 69 }),
       frameRate: 18,
       repeat: -1
     });
 
     this.anims.create({
       key: 'frank_talk',
-      frames: this.anims.generateFrameNumbers('frank-talk', { start: 0, end: 59 }),
+      frames: this.anims.generateFrameNumbers('frank-talk', { start: 0, end: 74 }),
       frameRate: 20,
       repeat: -1
     });
 
     this.anims.create({
       key: 'frank_intro',
-      frames: this.anims.generateFrameNumbers('frank-intro', { start: 0, end: 81 }),
+      frames: this.anims.generateFrameNumbers('frank-intro', { start: 0, end: 102 }),
       frameRate: 24,
       repeat: 0
     });
 
     this.anims.create({
       key: 'frank_writing',
-      frames: this.anims.generateFrameNumbers('frank-writing', { start: 0, end: 119 }),
+      frames: this.anims.generateFrameNumbers('frank-writing', { start: 0, end: 86 }),
       frameRate: 24,
       repeat: -1
     });
 
     this.anims.create({
       key: 'frank_close',
-      frames: this.anims.generateFrameNumbers('frank-close', { start: 0, end: 81 }),
+      frames: this.anims.generateFrameNumbers('frank-close', { start: 0, end: 102 }),
+      frameRate: 24,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'frank_duda',
+      frames: this.anims.generateFrameNumbers('frank-duda', { start: 0, end: 130 }),
+      frameRate: 24,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'frank_enojado',
+      frames: this.anims.generateFrameNumbers('frank-enojado', { start: 0, end: 30 }),
+      frameRate: 24,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'frank_tiralibreta',
+      frames: this.anims.generateFrameNumbers('frank-tiralibreta', { start: 0, end: 103 }),
       frameRate: 24,
       repeat: 0
     });

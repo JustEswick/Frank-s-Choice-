@@ -6,8 +6,8 @@ const STORAGE_KEY = 'frank_audio_settings';
 
 const MUSIC_FILES = {
   'jazz-main': 'jazz-main.mp3',
-  'jazz-quiz': 'jazz-quiz.mp3'
-  // 'jazz-reveal': 'jazz-reveal.mp3'  // TODO: add jazz-reveal.mp3
+  'jazz-quiz': 'jazz-quiz.mp3',
+  'jazz-reveal': 'jazz-reveal.mp3'
 };
 
 const SFX_FILES = {
@@ -18,7 +18,9 @@ const SFX_FILES = {
   'mismatch': 'mismatch.mp3',
   'transition': 'transition.mp3',
   'click': 'click.mp3',
-  'reveal': 'reveal.mp3'
+  'reveal': 'reveal.mp3',
+  'strike': 'strike.mp3',
+  'quiz_failed': 'quiz_failed.mp3'
 };
 
 const DEFAULT_MUSIC_VOLUME = 0.7;

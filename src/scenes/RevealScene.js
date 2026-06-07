@@ -132,6 +132,10 @@ export default class RevealScene extends Phaser.Scene {
     }).setOrigin(0.5).setAlpha(0);
 
     this.createButtons();
+    this.time.delayedCall(500, () => {
+      audioManager.playMusic('jazz-reveal');
+    });
+
     this.startReveal();
     audioManager.playSFX('reveal');
   }

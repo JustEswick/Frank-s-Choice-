@@ -46,6 +46,7 @@ export default class BuilderScene extends Phaser.Scene {
     this.createReadyButton();
     this.createRemoveButton();
     this.createExitButton();
+    this.createTipsButton();
     this.updateThumbnails();
 
     // Nicer scale text bubble that fades out
@@ -400,5 +401,48 @@ export default class BuilderScene extends Phaser.Scene {
     delete this.outfit[this.activeCategory];
     this.updateThumbnails();
     this.refreshTabs();
+  }
+
+  createTipsButton() {
+    const { width } = this.cameras.main;
+    const tipsLabel = getLang() === 'es' ? '💡 Tips' : '💡 Tips';
+    
+    this.tipsBtn = new UIButton(this, width - 200, 40, 100, 32, tipsLabel, {
+      sfx: 'click',
+      fillColor: 0xDAA520,
+      hoverColor: 0xC4941A,
+      strokeColor: 0xB8860B,
+      textColor: '#4A3728',
+      fontSize: '14px',
+      depth: 100,
+      callback: () => this.toggleTips()
+    });
+
+    const tipsText = getLang() === 'es' 
+      ? '¡Usa la ruedita del mouse\npara ajustar el tamaño\nde la ropa seleccionada!'
+      : 'Use the mouse wheel\nto resize the\nselected clothing!';
+
+    this.tipsContainer = this.add.container(width - 200, 105).setDepth(200).setAlpha(0);
+    
+    const bg = this.add.rectangle(0, 0, 240, 80, 0x2A1F16, 0.95).setStrokeStyle(2, 0xDAA520);
+    const txt = this.add.text(0, 0, tipsText, {
+      fontFamily: 'Inter',
+      fontSize: '14px',
+      color: '#FFF8E7',
+      align: 'center',
+      wordWrap: { width: 220 }
+    }).setOrigin(0.5);
+
+    this.tipsContainer.add([bg, txt]);
+    this.tipsVisible = false;
+  }
+
+  toggleTips() {
+    this.tipsVisible = !this.tipsVisible;
+    this.tweens.add({
+      targets: this.tipsContainer,
+      alpha: this.tipsVisible ? 1 : 0,
+      duration: 200
+    });
   }
 }

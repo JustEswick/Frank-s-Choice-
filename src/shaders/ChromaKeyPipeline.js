@@ -10,17 +10,19 @@ varying vec2 outTexCoord;
 void main()
 {
     vec4 color = texture2D(uMainSampler, outTexCoord);
+    float maxRB = max(color.r, color.b);
     
-    // Simple Green Spill Suppression
-    // Since the image already has a transparent background, we just need
-    // to remove the green fringe (where green is greater than red and blue).
-    if (color.a > 0.0) {
-        float maxRB = max(color.r, color.b);
-        if (color.g > maxRB) {
-            // Limit green to the max of red and blue, turning the fringe grey/neutral
-            color.g = maxRB;
-        }
+    // Only key out pixels where Green significantly overpowers Red/Blue
+    if (color.g - maxRB > 0.12) {
+        color.a = 0.0;
     }
+    // Spill suppression for the edges (anti-aliasing fringes)
+    else if (color.a > 0.0 && color.g > maxRB) {
+        color.g = maxRB;
+    }
+    
+    // Premultiply
+    color.rgb *= color.a;
     
     gl_FragColor = color;
 }

@@ -3,8 +3,8 @@ import PersistenceManager from '../systems/PersistenceManager.js';
 const translations = {
   es: {
     loading: 'Cargando...',
-    title: "Frank's Outfit Game",
-    subtitle: 'Viste a Frank para la ocasión',
+    title: "Frank's Tailored Lies",
+    subtitle: 'Engaña al sastre y sobrevive al interrogatorio',
     play: 'Jugar',
     history: 'Historial',
     settings: 'Ajustes',
@@ -64,8 +64,8 @@ const translations = {
   },
   en: {
     loading: 'Loading...',
-    title: "Frank's Outfit Game",
-    subtitle: 'Dress Frank for the occasion',
+    title: "Frank's Tailored Lies",
+    subtitle: 'Deceive the tailor and survive the interrogation',
     play: 'Play',
     history: 'History',
     settings: 'Settings',

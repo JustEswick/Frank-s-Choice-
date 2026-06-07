@@ -42,12 +42,17 @@ export default class QuizScene extends Phaser.Scene {
     this.typewriterTimer = null;
     this.lastTypewriterSfx = 0;
 
+    // Survival variables
+    this.globalTimeLeft = 180; // 3 minutes
+    this.strikes = 0;
+    this.questionTimeLeft = 3;
+
     this.add.image(0, 0, 'bg-quiz').setOrigin(0, 0).setDisplaySize(width, height);
 
     this.volumeControl = new VolumeControl(this, width - 36, 36, { depth: 90 });
 
     // Frank: Anchored to the bottom center, moved down to prevent floating, scaled up, moved left, with ChromaKey.
-    this.frank = this.add.sprite(width / 2 - 120, height + 140, 'frank-idle');
+    this.frank = this.add.sprite(width / 2 - 120, height + 190, 'frank-idle');
     this.frank.setOrigin(0.5, 1);
     this.frank.setScale(1.6); // Gran tamaño
     this.frank.setPostPipeline('ChromaKeyPipeline');
@@ -69,30 +74,51 @@ export default class QuizScene extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5).setDepth(11);
 
-    const barWidth = 200;
-    const barX = width / 2;
-    const barY = 30;
+    // HUD Box above the dialogue block
+    this.hudBg = this.add.rectangle(
+      280, height - 110, 300, 40, 0x2A1F16, 0.95
+    ).setStrokeStyle(2, 0xDAA520).setDepth(20);
 
-    this.progressBg = this.add.rectangle(barX, barY, barWidth, 14, 0x2A1F18, 0.8)
-        .setStrokeStyle(2, 0xDAA520).setDepth(20);
-    this.progressFill = this.add.rectangle(
-      barX - barWidth / 2 + 2, barY, 0, 10, 0x2E8B57
-    ).setOrigin(0, 0.5).setDepth(21);
-    this.progressText = this.add.text(barX, barY + 22, '0/30', {
-      fontFamily: 'Inter',
-      fontSize: '14px',
+    // Global Survival Timer
+    this.globalTimerText = this.add.text(200, height - 110, '03:00', {
+      fontFamily: 'Playfair Display',
+      fontSize: '26px',
       color: '#FFF8E7',
-      stroke: '#4A3728',
-      strokeThickness: 2,
       fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(21);
+
+    // Strikes Display
+    this.strikesText = this.add.text(350, height - 110, 'Strikes: 0/3', {
+      fontFamily: 'Playfair Display',
+      fontSize: '22px',
+      color: '#ff4444',
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(21);
+
+    // Question Timer (Quick reaction) placed above the options
+    this.questionTimerText = this.add.text(950, 130, '3', {
+      fontFamily: 'Playfair Display',
+      fontSize: '72px',
+      color: '#DAA520',
+      stroke: '#4A3728',
+      strokeThickness: 5,
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(30).setAlpha(0);
+
+    // Start global countdown
+    this.globalTimerEvent = this.time.addEvent({
+      delay: 1000,
+      callback: this.tickGlobalTimer,
+      callbackScope: this,
+      loop: true
+    });
 
     audioManager.playMusic('jazz-quiz');
 
     this.frank.play('frank_intro');
+    this.showIntro(); // Start the dialogue text immediately, synchronized with the animation
     this.frank.once('animationcomplete-frank_intro', () => {
       this.frank.play('frank_writing');
-      this.showIntro();
     });
   }
 
@@ -178,26 +204,40 @@ export default class QuizScene extends Phaser.Scene {
     this.isTypewriting = false;
   }
 
-  askNextQuestion() {
-    const confidence = this.recommendationEngine.getConfidence();
-    const askedEnough = this.questionManager.getAskedCount() >= MIN_QUESTIONS_BEFORE_END;
-
-    if (askedEnough && confidence > CONFIDENCE_THRESHOLD) {
-      this.endQuiz();
-      return;
+  tickGlobalTimer() {
+    if (this.globalTimeLeft <= 0 || this.strikes >= 3) return;
+    this.globalTimeLeft--;
+    
+    const m = Math.floor(this.globalTimeLeft / 60);
+    const s = this.globalTimeLeft % 60;
+    this.globalTimerText.setText(`0${m}:${s < 10 ? '0' : ''}${s}`);
+    
+    // Time running out effect
+    if (this.globalTimeLeft <= 30) {
+      this.globalTimerText.setColor('#ff4444');
     }
+
+    if (this.globalTimeLeft <= 0) {
+      if (this.questionTimerEvent) this.questionTimerEvent.remove();
+      this.questionTimerText.setAlpha(0);
+      this.endQuiz(); // Survived!
+    }
+  }
+
+  askNextQuestion() {
+    if (this.strikes >= 3 || this.globalTimeLeft <= 0) return;
 
     const question = this.questionManager.getNextQuestion(
       this.recommendationEngine.weights
     );
 
+    // If we run out of questions before 3 minutes, they survive early
     if (!question) {
       this.endQuiz();
       return;
     }
 
     this.currentQuestion = question;
-    this.updateProgress();
     this.displayQuestion(question);
   }
 
@@ -255,6 +295,66 @@ export default class QuizScene extends Phaser.Scene {
 
       this.optionButtons.push(btn);
     });
+
+    this.startQuestionTimer();
+  }
+
+  startQuestionTimer() {
+    this.questionTimeLeft = 3;
+    this.questionTimerText.setText('3').setAlpha(1).setScale(1);
+    
+    if (this.questionTimerEvent) this.questionTimerEvent.remove();
+    
+    this.questionTimerEvent = this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.questionTimeLeft--;
+        if (this.questionTimeLeft > 0) {
+          this.questionTimerText.setText(this.questionTimeLeft.toString());
+          this.tweens.add({ targets: this.questionTimerText, scale: 1.5, yoyo: true, duration: 150 });
+        } else {
+          this.handleStrike();
+        }
+      },
+      callbackScope: this,
+      repeat: 2
+    });
+  }
+
+  handleStrike() {
+    this.strikes++;
+    this.strikesText.setText(`Strikes: ${this.strikes}/3`);
+    this.registry.get('audioManager').playSFX('strike');
+    this.clearOptionButtons();
+    
+    this.questionTimerText.setText('❌').setAlpha(1);
+    
+    if (this.strikes >= 3) {
+      this.gameOver();
+    } else {
+      this.frank.play('frank_enojado');
+      this.frank.once('animationcomplete-frank_enojado', () => {
+        this.frank.play('frank_writing');
+        this.questionTimerText.setAlpha(0);
+        this.askNextQuestion();
+      });
+    }
+  }
+
+  gameOver() {
+    if (this.globalTimerEvent) this.globalTimerEvent.remove();
+    if (this.questionTimerEvent) this.questionTimerEvent.remove();
+    
+    this.registry.get('audioManager').stopMusic();
+    this.registry.get('audioManager').playSFX('quiz_failed');
+    
+    this.dialogueText.setText("Frank: ¡Demasiadas evasivas! Sé perfectamente cuándo alguien me miente. Se acabó el juego.");
+    this.frank.play('frank_tiralibreta');
+    
+    this.time.delayedCall(4000, () => {
+      this.cameras.main.fadeOut(500, 0, 0, 0);
+      this.time.delayedCall(500, () => this.goToScene('MenuScene'));
+    });
   }
 
   clearOptionButtons() {
@@ -263,18 +363,12 @@ export default class QuizScene extends Phaser.Scene {
   }
 
   selectAnswer(option) {
+    if (this.questionTimerEvent) this.questionTimerEvent.remove();
+    this.questionTimerText.setAlpha(0);
+    
     this.recommendationEngine.addAnswer(option);
     this.clearOptionButtons();
     this.askNextQuestion();
-  }
-
-  updateProgress() {
-    const asked = this.questionManager.getAskedCount();
-    const total = this.questionManager.getTotal();
-    const progress = asked / total;
-
-    this.progressFill.setSize(196 * progress, 10);
-    this.progressText.setText(`${asked}/${total}`);
   }
 
   endQuiz() {
