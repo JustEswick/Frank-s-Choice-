@@ -123,82 +123,99 @@ export default class BuilderScene extends Phaser.Scene {
 
   updateThumbnails() {
     this.thumbnailZones = [];
-    this.thumbnailButtons.forEach(({ bg, thumbImg, label }) => {
+    this.thumbnailButtons.forEach(({ bg, thumbImg, label, header }) => {
       bg.destroy();
       if (thumbImg && thumbImg.destroy) thumbImg.destroy();
       label.destroy();
+      if (header) header.destroy();
     });
     this.thumbnailButtons = [];
 
     const filtered = garmentsData.garments.filter(g => g.category === this.activeCategory);
+    
+    const groups = [
+      { title: getLang() === 'es' ? 'Formales' : 'Formal', items: filtered.filter(g => (g.tags.formalidad || 0) >= 0.5) },
+      { title: getLang() === 'es' ? 'Casuales' : 'Casual', items: filtered.filter(g => (g.tags.formalidad || 0) < 0.5) }
+    ];
+
     const thumbSize = 80;
     const labelH = 30;
     const cellW = thumbSize;
-    const cellH = thumbSize + labelH + 12;
+    const cellH = thumbSize + labelH + 24;
     const hGap = 10;
-    const vGap = 12;
-    const panelX = 20;
-    const panelY = 90;
-    const panelW = 230;
-    const panelH = 600;
-
-    const cols = Math.min(filtered.length, 2);
-    const rows = Math.ceil(filtered.length / cols);
-    const gridW = cols * cellW + (cols - 1) * hGap;
-    const gridH = rows * (cellH - vGap);
-    const offsetX = panelX + (panelW - gridW) / 2;
-    const offsetY = panelY + (panelH - gridH) / 2;
+    
+    const offsetX = 20 + (230 - (2 * cellW + hGap)) / 2 + cellW / 2; 
+    let currentY = 110;
 
     const audioManager = this.registry.get('audioManager');
 
-    filtered.forEach((garment, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const x = offsetX + col * (cellW + hGap) + cellW / 2;
-      const y = offsetY + row * cellH + cellW / 2;
+    groups.forEach(group => {
+      if (group.items.length === 0) return;
 
-      const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
-      const isSelected = this.outfit[this.activeCategory]?.id === garment.id;
-
-      const bg = this.add.rectangle(x, y, thumbSize, thumbSize, 0xE8D5C0)
-        .setStrokeStyle(2, isSelected ? 0x2E8B57 : 0xBBAA88)
-        .setInteractive({ useHandCursor: true })
-        .setDepth(10);
-
-      let thumbImg;
-      if (this.textures.exists(spriteKey)) {
-        thumbImg = this.add.image(x, y, spriteKey);
-        thumbImg.setDisplaySize(thumbSize - 8, thumbSize - 8);
-        thumbImg.setDepth(11);
-      } else {
-        thumbImg = this.add.text(x, y, garment.name.es.charAt(0), {
-          fontFamily: 'Inter',
-          fontSize: '22px',
-          color: '#4A3728',
-          fontStyle: 'bold'
-        }).setOrigin(0.5).setDepth(11);
-      }
-
-      const nameText = this.add.text(x, y + thumbSize / 2 + 4, garment.name.es, {
-        fontFamily: 'Inter',
-        fontSize: '11px',
-        color: '#FFF8E7',
-        stroke: '#4A3728',
-        strokeThickness: 2,
-        wordWrap: { width: cellW },
-        align: 'center',
+      const headerText = this.add.text(135, currentY, group.title, {
+        fontFamily: 'Playfair Display',
+        fontSize: '16px',
+        color: '#DAA520',
         fontStyle: 'bold'
-      }).setOrigin(0.5, 0).setDepth(11);
+      }).setOrigin(0.5, 0.5).setDepth(11);
+      
+      this.thumbnailButtons.push({ bg: this.add.rectangle(0,0,0,0), label: this.add.text(0,0,''), header: headerText });
 
-      bg.on('pointerover', () => bg.setFillStyle(0xF0E0D0));
-      bg.on('pointerout', () => bg.setFillStyle(0xE8D5C0));
-      bg.on('pointerdown', () => {
-        audioManager.playSFX('select');
-        this.selectGarment(garment);
-        this.updateThumbnails();
+      currentY += 25;
+
+      const cols = 2;
+      group.items.forEach((garment, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const x = offsetX + col * (cellW + hGap);
+        const y = currentY + row * cellH + cellW / 2;
+
+        const spriteKey = `garment_${garment.id.replace(/_/g, '-')}`;
+        const isSelected = this.outfit[this.activeCategory]?.id === garment.id;
+
+        const bg = this.add.rectangle(x, y, thumbSize, thumbSize, 0xE8D5C0)
+          .setStrokeStyle(2, isSelected ? 0x2E8B57 : 0xBBAA88)
+          .setInteractive({ useHandCursor: true })
+          .setDepth(10);
+
+        let thumbImg;
+        if (this.textures.exists(spriteKey)) {
+          thumbImg = this.add.image(x, y, spriteKey);
+          thumbImg.setDisplaySize(thumbSize - 8, thumbSize - 8);
+          thumbImg.setDepth(11);
+        } else {
+          thumbImg = this.add.text(x, y, garment.name.es.charAt(0), {
+            fontFamily: 'Inter',
+            fontSize: '22px',
+            color: '#4A3728',
+            fontStyle: 'bold'
+          }).setOrigin(0.5).setDepth(11);
+        }
+
+        const nameText = this.add.text(x, y + thumbSize / 2 + 4, garment.name.es, {
+          fontFamily: 'Inter',
+          fontSize: '11px',
+          color: '#FFF8E7',
+          stroke: '#4A3728',
+          strokeThickness: 2,
+          wordWrap: { width: cellW + 10 },
+          align: 'center',
+          fontStyle: 'bold'
+        }).setOrigin(0.5, 0).setDepth(11);
+
+        bg.on('pointerover', () => bg.setFillStyle(0xF0E0D0));
+        bg.on('pointerout', () => bg.setFillStyle(0xE8D5C0));
+        bg.on('pointerdown', () => {
+          audioManager.playSFX('select');
+          this.selectGarment(garment);
+          this.updateThumbnails();
+        });
+
+        this.thumbnailButtons.push({ garment, bg, thumbImg, label: nameText });
       });
 
-      this.thumbnailButtons.push({ garment, bg, thumbImg, label: nameText });
+      const rows = Math.ceil(group.items.length / cols);
+      currentY += rows * cellH + 10;
     });
   }
 
@@ -334,6 +351,21 @@ export default class BuilderScene extends Phaser.Scene {
   }
 
   onReady() {
+    const hasTorso = this.outfit.superior || this.outfit.conjunto;
+    const hasLegs = this.outfit.inferior || this.outfit.conjunto;
+    const hasShoes = this.outfit.calzado;
+
+    // Optional but requested by user: Force one of EVERY type if they said "de cada tipo", 
+    // but usually accessory and layer are optional. Let's force at least the body to be covered.
+    // However, the user said "escoja una prenda de cada tipo". Let's enforce everything except capa/accesorio, 
+    // or if they meant everything, we enforce it. We'll enforce torso, legs, and shoes as the bare minimum.
+    if (!hasTorso || !hasLegs || !hasShoes) {
+      this.showWarning(
+        getLang() === 'es' ? '¡Vístete por completo!\n(Torso, Piernas y Calzado)' : 'Dress completely!\n(Torso, Legs & Shoes)'
+      );
+      return;
+    }
+
     if (Object.keys(this.outfit).length === 0) return;
     const outfitArray = Object.values(this.outfit).map(g => {
       const entry = this.mannequinGarments[g.category];
@@ -351,6 +383,34 @@ export default class BuilderScene extends Phaser.Scene {
     this.registry.set('playerOutfit', outfitArray);
     this.cameras.main.fadeOut(500, 74, 55, 40);
     this.time.delayedCall(500, () => this.goToScene('QuizScene'));
+  }
+
+  showWarning(text) {
+    const audioManager = this.registry.get('audioManager');
+    if (audioManager) audioManager.playSFX('remove');
+
+    const { width, height } = this.cameras.main;
+    const warnBg = this.add.rectangle(width / 2, height / 2, 400, 100, 0x882222, 0.9)
+      .setStrokeStyle(4, 0x551111).setDepth(2000);
+    const warnTxt = this.add.text(width / 2, height / 2, text, {
+      fontFamily: 'Inter',
+      fontSize: '20px',
+      color: '#FFFFFF',
+      align: 'center',
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(2001);
+
+    this.tweens.add({
+      targets: [warnBg, warnTxt],
+      y: '-=20',
+      alpha: 0,
+      delay: 1500,
+      duration: 500,
+      onComplete: () => {
+        warnBg.destroy();
+        warnTxt.destroy();
+      }
+    });
   }
 
   goToScene(key) {

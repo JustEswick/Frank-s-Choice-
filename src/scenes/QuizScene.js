@@ -76,11 +76,11 @@ export default class QuizScene extends Phaser.Scene {
 
     // HUD Box above the dialogue block
     this.hudBg = this.add.rectangle(
-      280, height - 110, 300, 40, 0x2A1F16, 0.95
+      300, height - 110, 420, 40, 0x2A1F16, 0.95
     ).setStrokeStyle(2, 0xDAA520).setDepth(20);
 
     // Global Survival Timer
-    this.globalTimerText = this.add.text(200, height - 110, '03:00', {
+    this.globalTimerText = this.add.text(150, height - 110, '03:00', {
       fontFamily: 'Playfair Display',
       fontSize: '26px',
       color: '#FFF8E7',
@@ -88,10 +88,19 @@ export default class QuizScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(21);
 
     // Strikes Display
-    this.strikesText = this.add.text(350, height - 110, 'Strikes: 0/3', {
+    this.strikesText = this.add.text(280, height - 110, 'Strikes: 0/3', {
       fontFamily: 'Playfair Display',
       fontSize: '22px',
       color: '#ff4444',
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(21);
+
+    // Lies Display
+    const liesLabel = this.registry.get('lang') === 'es' || !this.registry.get('lang') ? 'Mentiras' : 'Lies';
+    this.liesText = this.add.text(430, height - 110, `${liesLabel}: 0/5`, {
+      fontFamily: 'Playfair Display',
+      fontSize: '22px',
+      color: '#DAA520',
       fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(21);
 
@@ -366,9 +375,35 @@ export default class QuizScene extends Phaser.Scene {
     if (this.questionTimerEvent) this.questionTimerEvent.remove();
     this.questionTimerText.setAlpha(0);
     
-    this.recommendationEngine.addAnswer(option);
+    const result = this.recommendationEngine.addAnswer(option);
+    
+    // Update Lies HUD
+    const liesLabel = this.registry.get('lang') === 'es' || !this.registry.get('lang') ? 'Mentiras' : 'Lies';
+    this.liesText.setText(`${liesLabel}: ${result.liesCount}/5`);
+
+    if (result.isLie) {
+        // Flash the lies text red briefly
+        this.liesText.setColor('#ff4444');
+        this.tweens.add({ targets: this.liesText, scale: 1.2, yoyo: true, duration: 150 });
+        this.time.delayedCall(500, () => this.liesText.setColor('#DAA520'));
+    }
+
     this.clearOptionButtons();
-    this.askNextQuestion();
+
+    if (result.liesCount >= 5) {
+        this.recommendationEngine.liesCount = 0; // reset the internal counter
+        this.time.delayedCall(600, () => this.liesText.setText(`${liesLabel}: 0/5`));
+        this.handleStrike();
+    } else if (result.liesCount === 3 && result.isLie) {
+        // At exactly 3 lies, play 'duda' animation to show suspicion
+        this.frank.play('frank_duda');
+        this.frank.once('animationcomplete-frank_duda', () => {
+            this.frank.play('frank_writing');
+            this.askNextQuestion();
+        });
+    } else {
+        this.askNextQuestion();
+    }
   }
 
   endQuiz() {

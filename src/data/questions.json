@@ -383,7 +383,7 @@
         {
           "id": "muchos_accesorios",
           "label": { "es": "Varios accesorios", "en": "Several accessories" },
-          "weight": { "formalidad": 0.3, "evento_tipo": "fiesta" },
+          "weight": { "formalidad": 0.3 },
           "priority_weight": 0.7
         },
         {

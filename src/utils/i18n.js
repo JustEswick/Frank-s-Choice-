@@ -29,8 +29,8 @@ const translations = {
       capa: 'Capa',
       conjunto: 'Conjunto'
     },
-    frank_intro: '¡Hola! Soy Frank. ¡Vísteme para esta ocasión!',
-    frank_confident: '¡Me siento genial con este outfit!',
+    frank_intro: 'Soy Frank. Responderás mis preguntas y adivinaré tu outfit... ¡No intentes mentirme!',
+    frank_confident: '¡Las matemáticas no mienten! Este es tu outfit.',
     no_history: 'No hay rondas anteriores',
     round_date: 'Fecha de la ronda',
     garment_names: {
@@ -90,8 +90,8 @@ const translations = {
       capa: 'Layer',
       conjunto: 'Outfit Set'
     },
-    frank_intro: "Hi! I'm Frank. Dress me for this occasion!",
-    frank_confident: 'I feel great with this outfit!',
+    frank_intro: "I'm Frank. Answer my questions and I'll guess your outfit... Don't try to lie to me!",
+    frank_confident: "Math never lies! Here is your outfit.",
     no_history: 'No previous rounds',
     round_date: 'Round date',
     garment_names: {

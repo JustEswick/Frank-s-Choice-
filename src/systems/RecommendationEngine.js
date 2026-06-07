@@ -19,31 +19,90 @@ export default class RecommendationEngine {
   constructor() {
     this.garments = garmentsData.garments;
     this.weights = { ...DEFAULT_WEIGHTS };
+    this.uncertainties = {
+      calor: 1.0, templado: 1.0, frio: 1.0,
+      formalidad: 1.0, conjunto_prefer: 1.0
+    };
     this.answerCount = 0;
+    this.liesCount = 0;
+    
+    // Configurable Kalman parameters
+    this.processNoise = 0.05; // Q: Natural decay of certainty
+    this.baseMeasurementNoise = 0.5; // R_base: Baseline trust in answers
+    this.lieThreshold = 0.6; // Innovation threshold to consider it a lie
+    this.lieMultiplier = 8.0; // How much tension inflates measurement noise
   }
 
   reset() {
     this.weights = { ...DEFAULT_WEIGHTS };
+    this.uncertainties = {
+      calor: 1.0, templado: 1.0, frio: 1.0,
+      formalidad: 1.0, conjunto_prefer: 1.0
+    };
     this.answerCount = 0;
+    this.liesCount = 0;
+  }
+
+  _updateKalman(key, measurement) {
+    // 1. Predicción
+    let x_pred = this.weights[key];
+    let p_pred = this.uncertainties[key] + this.processNoise;
+
+    // 2. Tensión (Innovación)
+    let y = measurement - x_pred;
+    
+    // 3. Ruido dinámico: Castiga las mentiras grandes
+    let r_dynamic = this.baseMeasurementNoise + (y * y * this.lieMultiplier);
+
+    // 4. Ganancia de Kalman
+    let k = p_pred / (p_pred + r_dynamic);
+
+    // 5. Actualización
+    this.weights[key] = x_pred + k * y;
+    this.uncertainties[key] = (1 - k) * p_pred;
+
+    return Math.abs(y);
   }
 
   addAnswer(answer) {
     const w = answer.weight || {};
     this.answerCount++;
 
-    if (w.calor !== undefined) this.weights.calor = (this.weights.calor + w.calor) / 2;
-    if (w.templado !== undefined) this.weights.templado = (this.weights.templado + w.templado) / 2;
-    if (w.frio !== undefined) this.weights.frio = (this.weights.frio + w.frio) / 2;
-    if (w.formalidad !== undefined) {
-      this.weights.formalidad = (this.weights.formalidad + w.formalidad) / 2;
+    let maxTension = 0;
+
+    if (w.calor !== undefined) maxTension = Math.max(maxTension, this._updateKalman('calor', w.calor));
+    if (w.templado !== undefined) maxTension = Math.max(maxTension, this._updateKalman('templado', w.templado));
+    if (w.frio !== undefined) maxTension = Math.max(maxTension, this._updateKalman('frio', w.frio));
+    if (w.formalidad !== undefined) maxTension = Math.max(maxTension, this._updateKalman('formalidad', w.formalidad));
+    if (w.conjunto_prefer !== undefined) maxTension = Math.max(maxTension, this._updateKalman('conjunto_prefer', w.conjunto_prefer));
+
+    // Categorical variables (Event, Color, Texture) don't use Kalman perfectly, 
+    // but we can flag large shifts as lies if they completely change.
+    if (w.evento_tipo !== undefined) {
+      if (this.weights.evento_tipo && this.weights.evento_tipo !== w.evento_tipo) maxTension = Math.max(maxTension, 0.8);
+      this.weights.evento_tipo = w.evento_tipo;
     }
-    if (w.evento_tipo !== undefined) this.weights.evento_tipo = w.evento_tipo;
-    if (w.color_grupo !== undefined) this.weights.color_grupo = w.color_grupo;
+    if (w.color_grupo !== undefined) {
+      if (this.weights.color_grupo && this.weights.color_grupo !== w.color_grupo) maxTension = Math.max(maxTension, 0.8);
+      this.weights.color_grupo = w.color_grupo;
+    }
     if (w.tono !== undefined) this.weights.tono = w.tono;
-    if (w.textura !== undefined) this.weights.textura = w.textura;
-    if (w.conjunto_prefer !== undefined) {
-      this.weights.conjunto_prefer = (this.weights.conjunto_prefer + w.conjunto_prefer) / 2;
+    if (w.textura !== undefined) {
+      if (this.weights.textura && this.weights.textura !== w.textura) maxTension = Math.max(maxTension, 0.8);
+      this.weights.textura = w.textura;
     }
+
+    let isLie = false;
+    if (maxTension > this.lieThreshold) {
+      this.liesCount++;
+      isLie = true;
+    }
+
+    return {
+      isLie,
+      liesCount: this.liesCount,
+      tension: maxTension
+    };
   }
 
   calculateGarmentScore(garment) {
