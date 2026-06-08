@@ -123,11 +123,12 @@ export default class BuilderScene extends Phaser.Scene {
 
   updateThumbnails() {
     this.thumbnailZones = [];
-    this.thumbnailButtons.forEach(({ bg, thumbImg, label, header }) => {
-      bg.destroy();
+    this.thumbnailButtons.forEach(({ bg, thumbImg, label, header, headerBg }) => {
+      if (bg) bg.destroy();
       if (thumbImg && thumbImg.destroy) thumbImg.destroy();
-      label.destroy();
+      if (label) label.destroy();
       if (header) header.destroy();
+      if (headerBg) headerBg.destroy();
     });
     this.thumbnailButtons = [];
 
