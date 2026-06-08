@@ -123,15 +123,6 @@ export default class BootScene extends Phaser.Scene {
       this.load.image(`garment_${id}`, `assets/garments/${id}.png`);
     });
 
-    // UI elements
-    const uiElements = [
-      'btn-play', 'btn-history', 'btn-back', 'btn-ready',
-      'panel-dialogue', 'tab-bg', 'tab-active'
-    ];
-    uiElements.forEach((name) => {
-      this.load.image(name, `assets/ui/${name}.png`);
-    });
-
     // Audio via AudioManager
     AudioManager.preload(this);
   }

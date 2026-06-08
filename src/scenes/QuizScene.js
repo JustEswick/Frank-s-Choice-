@@ -236,13 +236,30 @@ export default class QuizScene extends Phaser.Scene {
   askNextQuestion() {
     if (this.strikes >= 3 || this.globalTimeLeft <= 0) return;
 
+    const wasBossPhase = this.questionManager.bossPhase;
     const question = this.questionManager.getNextQuestion(
-      this.recommendationEngine.weights
+      this.recommendationEngine.weights,
+      this.strikes
     );
 
     // If we run out of questions before 3 minutes, they survive early
     if (!question) {
       this.endQuiz();
+      return;
+    }
+
+    if (!wasBossPhase && this.questionManager.bossPhase) {
+      // Transition to Boss Phase
+      this.frank.play('frank_duda');
+      
+      if (this.typewriterTimer) this.typewriterTimer.remove();
+      this.typewriteText("Un momento... Hay algunas inconsistencias en tu historia. Voy a repasar algunas cosas...", () => {
+        this.time.delayedCall(2500, () => {
+          this.frank.play('frank_idle');
+          this.currentQuestion = question;
+          this.displayQuestion(question);
+        });
+      });
       return;
     }
 

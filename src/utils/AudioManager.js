@@ -7,7 +7,7 @@ const STORAGE_KEY = 'frank_audio_settings';
 const MUSIC_FILES = {
   'jazz-main': 'jazz-main.mp3',
   'jazz-quiz': 'jazz-quiz.mp3',
-  'jazz-reveal': 'jazz-reveal.mp3'
+  'jazz-reveal': 'music3A_Polished_Lapel.mp3'
 };
 
 const SFX_FILES = {

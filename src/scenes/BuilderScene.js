@@ -152,14 +152,19 @@ export default class BuilderScene extends Phaser.Scene {
     groups.forEach(group => {
       if (group.items.length === 0) return;
 
+      const headerBg = this.add.rectangle(135, currentY, 180, 24, 0x4A3728, 0.8)
+        .setStrokeStyle(1, 0xDAA520)
+        .setOrigin(0.5, 0.5)
+        .setDepth(10);
+
       const headerText = this.add.text(135, currentY, group.title, {
         fontFamily: 'Playfair Display',
         fontSize: '16px',
-        color: '#DAA520',
+        color: '#FFF8E7',
         fontStyle: 'bold'
       }).setOrigin(0.5, 0.5).setDepth(11);
       
-      this.thumbnailButtons.push({ bg: this.add.rectangle(0,0,0,0), label: this.add.text(0,0,''), header: headerText });
+      this.thumbnailButtons.push({ bg: this.add.rectangle(0,0,0,0), label: this.add.text(0,0,''), header: headerText, headerBg });
 
       currentY += 25;
 

@@ -158,6 +158,9 @@
         ],
         "textura": [
           "tela"
+        ],
+        "corte": [
+          "largo"
         ]
       }
     },
@@ -186,6 +189,9 @@
         ],
         "textura": [
           "denim"
+        ],
+        "corte": [
+          "largo"
         ]
       }
     },
@@ -211,6 +217,9 @@
         ],
         "textura": [
           "lino"
+        ],
+        "corte": [
+          "corto"
         ]
       }
     },
@@ -239,6 +248,9 @@
         ],
         "textura": [
           "tela"
+        ],
+        "corte": [
+          "corto"
         ]
       }
     },
@@ -265,6 +277,9 @@
         ],
         "textura": [
           "lino"
+        ],
+        "corte": [
+          "largo"
         ]
       }
     },
@@ -292,6 +307,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "cerrado"
         ]
       }
     },
@@ -319,6 +337,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "cerrado"
         ]
       }
     },
@@ -346,6 +367,9 @@
         ],
         "textura": [
           "tela"
+        ],
+        "corte": [
+          "deportivo"
         ]
       }
     },
@@ -371,6 +395,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "abierto"
         ]
       }
     },
@@ -397,6 +424,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "bota"
         ]
       }
     },
@@ -666,6 +696,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "tacon"
         ]
       }
     },
@@ -692,6 +725,9 @@
         ],
         "textura": [
           "cuero"
+        ],
+        "corte": [
+          "tacon"
         ]
       }
     }

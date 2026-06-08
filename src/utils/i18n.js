@@ -30,7 +30,7 @@ const translations = {
       conjunto: 'Conjunto'
     },
     frank_intro: 'Soy Frank. Responderás mis preguntas y adivinaré tu outfit... ¡No intentes mentirme!',
-    frank_confident: '¡Las matemáticas no mienten! Este es tu outfit.',
+    frank_confident: '¡Mis instintos de sastre nunca fallan! Este es tu outfit.',
     no_history: 'No hay rondas anteriores',
     round_date: 'Fecha de la ronda',
     garment_names: {

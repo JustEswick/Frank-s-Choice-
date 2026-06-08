@@ -265,8 +265,9 @@ export default class RevealScene extends Phaser.Scene {
       this.tweens.add({ targets: frankLayer, alpha: 1, duration: 300, ease: 'Power2' });
     }
 
-    const isMatch = playerGarment && frankGarment && playerGarment.id === frankGarment.id;
-    let score = isMatch ? 20 : 0;
+    const isNullMatch = !playerGarment && !frankGarment;
+    const isMatch = isNullMatch || (playerGarment && frankGarment && playerGarment.id === frankGarment.id);
+    let score = (isMatch && !isNullMatch) ? 20 : 0;
     
     // Tailor Mechanic: Check how closely the player aligned their garment to the PERFECT obfuscated offsets!
     let tailorBonus = 0;
@@ -296,10 +297,13 @@ export default class RevealScene extends Phaser.Scene {
     
     score += tailorBonus;
 
-    this.breakdown.push({ category: cat, score, match: isMatch, tailorBonus });
+    this.breakdown.push({ category: cat, score, match: isMatch, tailorBonus, isNullMatch });
 
     this.time.delayedCall(SFX_DELAY, () => {
-      if (isMatch) {
+      if (isNullMatch) {
+        result.resultText.setText('-');
+        result.resultText.setColor('#888888');
+      } else if (isMatch) {
         result.resultText.setText('\u2713');
         result.resultText.setColor('#' + GREEN.toString(16).padStart(6, '0'));
         audioManager.playSFX('match');
@@ -321,17 +325,17 @@ export default class RevealScene extends Phaser.Scene {
 
   showScore() {
     const { width, height } = this.cameras.main;
-    const basePossible = CATEGORIES.length * 20;
-    // Total possible is base matching + up to 5 tailor bonus points per category
-    const maxWithBonus = basePossible + (CATEGORIES.length * 5); 
     
-    const totalScore = this.breakdown.reduce((sum, b) => sum + b.score, 0);
-    // Calculate percentage against the base, allowing them to go over 100% if they matched AND aligned perfectly!
-    let finalPercent = Math.round((totalScore / basePossible) * 100);
+    let activeCategories = this.breakdown.filter(b => !b.isNullMatch).length;
+    if (activeCategories === 0) activeCategories = 1; // Prevent division by zero
+    const basePossible = activeCategories * 20;
     
-    // Capped at 125% visually, but the raw score is saved correctly.
+    const pureScore = this.breakdown.reduce((sum, b) => sum + (b.match && !b.isNullMatch ? 20 : 0), 0);
+    const totalTailorBonus = this.breakdown.reduce((sum, b) => sum + b.tailorBonus, 0);
+
+    let finalPercent = Math.round((pureScore / basePossible) * 100);
     
-    this.scoreLabel.setText('Similitud + Bono de Sastre');
+    this.scoreLabel.setText('Similitud');
     this.tweens.add({
       targets: this.scoreLabel,
       alpha: 1,
@@ -354,10 +358,123 @@ export default class RevealScene extends Phaser.Scene {
         if (current >= finalPercent) {
           current = finalPercent;
           timer.remove();
+          
+          this.time.delayedCall(400, () => this.showPlayerScore(finalPercent, totalTailorBonus));
+          
+          if (finalPercent < 50) {
+            this.time.delayedCall(800, () => this.showFrankAngry());
+          }
         }
         this.scoreText.setText(`${Math.round(current)}%`);
       }
     });
+  }
+
+  showFrankAngry() {
+    const { width, height } = this.cameras.main;
+    const audioManager = this.registry.get('audioManager');
+
+    const darkBg = this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0).setDepth(100).setAlpha(0);
+    this.tweens.add({ targets: darkBg, alpha: 1, duration: 500 });
+
+    const frankSprite = this.add.sprite(width * 0.5, height * 0.45, 'frank-idle')
+      .setOrigin(0.5, 0.5)
+      .setPostPipeline('ChromaKeyPipeline')
+      .setDepth(101)
+      .setScale(1.5)
+      .setAlpha(0);
+    frankSprite.play('frank_enojado');
+    
+    const dialogBox = this.add.rectangle(width * 0.5, height * 0.7, 500, 100, 0xFFFFFF, 0.9)
+      .setStrokeStyle(4, 0xDAA520).setOrigin(0.5).setDepth(101).setAlpha(0);
+      
+    const dialogText = this.add.text(width * 0.5, height * 0.7, '¡Me has logrado engañar esta vez!', {
+      fontFamily: 'Inter',
+      fontSize: '24px',
+      color: '#4A3728',
+      fontStyle: 'bold',
+      align: 'center'
+    }).setOrigin(0.5).setDepth(102).setAlpha(0);
+
+    this.tweens.add({ targets: [frankSprite, dialogBox, dialogText], alpha: 1, duration: 500 });
+
+    const closeBtn = new UIButton(this, width * 0.5, height * 0.85, 120, 40, 'Continuar', {
+      sfx: 'click',
+      depth: 102,
+      callback: () => {
+        this.tweens.add({
+          targets: [darkBg, frankSprite, dialogBox, dialogText, closeBtn.bg, closeBtn.label],
+          alpha: 0,
+          duration: 300,
+          onComplete: () => {
+            darkBg.destroy();
+            frankSprite.destroy();
+            dialogBox.destroy();
+            dialogText.destroy();
+            closeBtn.bg.destroy();
+            closeBtn.label.destroy();
+          }
+        });
+      }
+    });
+    closeBtn.bg.setAlpha(0);
+    closeBtn.label.setAlpha(0);
+    this.tweens.add({ targets: [closeBtn.bg, closeBtn.label], alpha: 1, duration: 500 });
+  }
+
+  showPlayerScore(similarityPercent, tailorBonus) {
+    const { width, height } = this.cameras.main;
+    
+    const deception = 100 - similarityPercent;
+    const playerScore = deception + (tailorBonus * 2);
+    
+    let stars = 0;
+    if (playerScore >= 120) stars = 5;
+    else if (playerScore >= 90) stars = 4;
+    else if (playerScore >= 60) stars = 3;
+    else if (playerScore >= 30) stars = 2;
+    else if (playerScore > 0) stars = 1;
+
+    const panelW = 200;
+    const panelH = 75;
+    const px = width / 2 + 230;
+    const py = height - 110;
+
+    const bg = this.add.rectangle(px, py, panelW, panelH, 0x1A0F08, 0.9)
+      .setStrokeStyle(2, 0xDAA520).setDepth(15).setAlpha(0);
+
+    const title = this.add.text(px, py - 20, 'Puntaje de Engaño', {
+      fontFamily: 'Playfair Display',
+      fontSize: '14px',
+      color: '#FFF8E7',
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(16).setAlpha(0);
+
+    let starsStr = '';
+    for(let i=0; i<stars; i++) starsStr += '⭐';
+    for(let i=stars; i<5; i++) starsStr += '☆';
+
+    const starsText = this.add.text(px, py + 2, starsStr, {
+      fontSize: '22px',
+      color: '#FFD700'
+    }).setOrigin(0.5).setDepth(16).setAlpha(0);
+    
+    const desc = this.add.text(px, py + 22, `Engaño: ${deception}% | Bono: +${tailorBonus}`, {
+      fontFamily: 'Inter',
+      fontSize: '11px',
+      color: '#BBAA88'
+    }).setOrigin(0.5).setDepth(16).setAlpha(0);
+
+    this.tweens.add({
+      targets: [bg, title, starsText, desc],
+      alpha: 1,
+      y: '+=5',
+      duration: 600,
+      ease: 'Power2'
+    });
+    
+    const audioManager = this.registry.get('audioManager');
+    audioManager.playSFX('match');
   }
 
   createButtons() {

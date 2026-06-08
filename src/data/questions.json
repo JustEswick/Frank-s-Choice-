@@ -1,6 +1,121 @@
 {
   "questions": [
     {
+      "id": "corte_calzado_01",
+      "category": "corte",
+      "text": {
+        "es": "¿Qué tipo de calzado prefieres?",
+        "en": "What type of shoes do you prefer?"
+      },
+      "options": [
+        {
+          "id": "cerrado",
+          "label": {
+            "es": "Zapato cerrado clásico",
+            "en": "Classic closed shoe"
+          },
+          "weight": {
+            "corte_calzado": "cerrado"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "deportivo",
+          "label": {
+            "es": "Deportivo (tenis)",
+            "en": "Sports (sneakers)"
+          },
+          "weight": {
+            "corte_calzado": "deportivo"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "bota",
+          "label": {
+            "es": "Botas",
+            "en": "Boots"
+          },
+          "weight": {
+            "corte_calzado": "bota"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "abierto",
+          "label": {
+            "es": "Abierto (sandalias)",
+            "en": "Open (sandals)"
+          },
+          "weight": {
+            "corte_calzado": "abierto"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "tacon",
+          "label": {
+            "es": "Con tacón",
+            "en": "With heels"
+          },
+          "weight": {
+            "corte_calzado": "tacon"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "indiferente",
+          "label": {
+            "es": "No importa",
+            "en": "Doesn't matter"
+          },
+          "weight": {},
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": "corte_01",
+      "category": "corte",
+      "text": {
+        "es": "¿Prefieres pantalones largos o algo corto (falda/shorts)?",
+        "en": "Do you prefer long pants or something short (skirt/shorts)?"
+      },
+      "options": [
+        {
+          "id": "largo",
+          "label": {
+            "es": "Pantalón largo",
+            "en": "Long pants"
+          },
+          "weight": {
+            "corte_inf": "largo"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "corto",
+          "label": {
+            "es": "Algo corto (falda/short)",
+            "en": "Something short"
+          },
+          "weight": {
+            "corte_inf": "corto"
+          },
+          "priority_weight": 0.9
+        },
+        {
+          "id": "indiferente",
+          "label": {
+            "es": "No importa",
+            "en": "Doesn't matter"
+          },
+          "weight": {},
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
       "id": "clima_01",
       "category": "clima",
       "text": {
@@ -10,26 +125,54 @@
       "options": [
         {
           "id": "calor",
-          "label": { "es": "Hace calor", "en": "It's hot" },
-          "weight": { "calor": 1.0, "templado": 0.0, "frio": 0.0 },
+          "label": {
+            "es": "Hace calor",
+            "en": "It's hot"
+          },
+          "weight": {
+            "calor": 1,
+            "templado": 0,
+            "frio": 0
+          },
           "priority_weight": 0.9
         },
         {
           "id": "templado",
-          "label": { "es": "Está templado", "en": "It's mild" },
-          "weight": { "calor": 0.0, "templado": 1.0, "frio": 0.0 },
+          "label": {
+            "es": "Está templado",
+            "en": "It's mild"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 1,
+            "frio": 0
+          },
           "priority_weight": 0.7
         },
         {
           "id": "frio",
-          "label": { "es": "Hace frío", "en": "It's cold" },
-          "weight": { "calor": 0.0, "templado": 0.0, "frio": 1.0 },
+          "label": {
+            "es": "Hace frío",
+            "en": "It's cold"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0,
+            "frio": 1
+          },
           "priority_weight": 0.9
         },
         {
           "id": "lluvia",
-          "label": { "es": "Está lloviendo", "en": "It's raining" },
-          "weight": { "calor": 0.0, "templado": 0.5, "frio": 0.5 },
+          "label": {
+            "es": "Está lloviendo",
+            "en": "It's raining"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0.5,
+            "frio": 0.5
+          },
           "priority_weight": 0.8
         }
       ]
@@ -44,32 +187,67 @@
       "options": [
         {
           "id": "muy_caliente",
-          "label": { "es": "Más de 30°C", "en": "Over 30°C" },
-          "weight": { "calor": 1.0, "templado": 0.0, "frio": 0.0 },
+          "label": {
+            "es": "Más de 30°C",
+            "en": "Over 30°C"
+          },
+          "weight": {
+            "calor": 1,
+            "templado": 0,
+            "frio": 0
+          },
           "priority_weight": 0.85
         },
         {
           "id": "caliente",
-          "label": { "es": "25-30°C", "en": "25-30°C" },
-          "weight": { "calor": 0.8, "templado": 0.2, "frio": 0.0 },
+          "label": {
+            "es": "25-30°C",
+            "en": "25-30°C"
+          },
+          "weight": {
+            "calor": 0.8,
+            "templado": 0.2,
+            "frio": 0
+          },
           "priority_weight": 0.75
         },
         {
           "id": "ameno",
-          "label": { "es": "18-25°C", "en": "18-25°C" },
-          "weight": { "calor": 0.1, "templado": 0.9, "frio": 0.0 },
+          "label": {
+            "es": "18-25°C",
+            "en": "18-25°C"
+          },
+          "weight": {
+            "calor": 0.1,
+            "templado": 0.9,
+            "frio": 0
+          },
           "priority_weight": 0.7
         },
         {
           "id": "fresquito",
-          "label": { "es": "10-18°C", "en": "10-18°C" },
-          "weight": { "calor": 0.0, "templado": 0.4, "frio": 0.6 },
+          "label": {
+            "es": "10-18°C",
+            "en": "10-18°C"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0.4,
+            "frio": 0.6
+          },
           "priority_weight": 0.8
         },
         {
           "id": "helado",
-          "label": { "es": "Menos de 10°C", "en": "Under 10°C" },
-          "weight": { "calor": 0.0, "templado": 0.0, "frio": 1.0 },
+          "label": {
+            "es": "Menos de 10°C",
+            "en": "Under 10°C"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0,
+            "frio": 1
+          },
           "priority_weight": 0.9
         }
       ]
@@ -84,20 +262,41 @@
       "options": [
         {
           "id": "sin_viento",
-          "label": { "es": "Tranquilo", "en": "Calm" },
-          "weight": { "calor": 0.6, "templado": 0.4, "frio": 0.0 },
+          "label": {
+            "es": "Tranquilo",
+            "en": "Calm"
+          },
+          "weight": {
+            "calor": 0.6,
+            "templado": 0.4,
+            "frio": 0
+          },
           "priority_weight": 0.5
         },
         {
           "id": "brisa",
-          "label": { "es": "Con brisa", "en": "Breezy" },
-          "weight": { "calor": 0.3, "templado": 0.6, "frio": 0.1 },
+          "label": {
+            "es": "Con brisa",
+            "en": "Breezy"
+          },
+          "weight": {
+            "calor": 0.3,
+            "templado": 0.6,
+            "frio": 0.1
+          },
           "priority_weight": 0.6
         },
         {
           "id": "mucho_viento",
-          "label": { "es": "Mucho viento", "en": "Very windy" },
-          "weight": { "calor": 0.0, "templado": 0.2, "frio": 0.8 },
+          "label": {
+            "es": "Mucho viento",
+            "en": "Very windy"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0.2,
+            "frio": 0.8
+          },
           "priority_weight": 0.75
         }
       ]
@@ -112,20 +311,41 @@
       "options": [
         {
           "id": "no_precipitacion",
-          "label": { "es": "No, está despejado", "en": "No, it's clear" },
-          "weight": { "calor": 0.5, "templado": 0.5, "frio": 0.0 },
+          "label": {
+            "es": "No, está despejado",
+            "en": "No, it's clear"
+          },
+          "weight": {
+            "calor": 0.5,
+            "templado": 0.5,
+            "frio": 0
+          },
           "priority_weight": 0.5
         },
         {
           "id": "lluvia_probable",
-          "label": { "es": "Posible lluvia", "en": "Possible rain" },
-          "weight": { "calor": 0.1, "templado": 0.5, "frio": 0.4 },
+          "label": {
+            "es": "Posible lluvia",
+            "en": "Possible rain"
+          },
+          "weight": {
+            "calor": 0.1,
+            "templado": 0.5,
+            "frio": 0.4
+          },
           "priority_weight": 0.7
         },
         {
           "id": "nieve_probable",
-          "label": { "es": "Posible nieve", "en": "Possible snow" },
-          "weight": { "calor": 0.0, "templado": 0.0, "frio": 1.0 },
+          "label": {
+            "es": "Posible nieve",
+            "en": "Possible snow"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0,
+            "frio": 1
+          },
           "priority_weight": 0.95
         }
       ]
@@ -140,20 +360,41 @@
       "options": [
         {
           "id": "mucho_sol",
-          "label": { "es": "Sí, mucho sol", "en": "Yes, very sunny" },
-          "weight": { "calor": 0.8, "templado": 0.2, "frio": 0.0 },
+          "label": {
+            "es": "Sí, mucho sol",
+            "en": "Yes, very sunny"
+          },
+          "weight": {
+            "calor": 0.8,
+            "templado": 0.2,
+            "frio": 0
+          },
           "priority_weight": 0.7
         },
         {
           "id": "algo_nublado",
-          "label": { "es": "Algo nublado", "en": "Partly cloudy" },
-          "weight": { "calor": 0.3, "templado": 0.6, "frio": 0.1 },
+          "label": {
+            "es": "Algo nublado",
+            "en": "Partly cloudy"
+          },
+          "weight": {
+            "calor": 0.3,
+            "templado": 0.6,
+            "frio": 0.1
+          },
           "priority_weight": 0.6
         },
         {
           "id": "muy_nublado",
-          "label": { "es": "Muy nublado", "en": "Very cloudy" },
-          "weight": { "calor": 0.0, "templado": 0.4, "frio": 0.6 },
+          "label": {
+            "es": "Muy nublado",
+            "en": "Very cloudy"
+          },
+          "weight": {
+            "calor": 0,
+            "templado": 0.4,
+            "frio": 0.6
+          },
           "priority_weight": 0.65
         }
       ]
@@ -168,32 +409,62 @@
       "options": [
         {
           "id": "boda",
-          "label": { "es": "Una boda", "en": "A wedding" },
-          "weight": { "evento_tipo": "boda", "formalidad": 0.9 },
+          "label": {
+            "es": "Una boda",
+            "en": "A wedding"
+          },
+          "weight": {
+            "evento_tipo": "boda",
+            "formalidad": 0.9
+          },
           "priority_weight": 0.95
         },
         {
           "id": "trabajo",
-          "label": { "es": "Al trabajo", "en": "To work" },
-          "weight": { "evento_tipo": "trabajo", "formalidad": 0.7 },
+          "label": {
+            "es": "Al trabajo",
+            "en": "To work"
+          },
+          "weight": {
+            "evento_tipo": "trabajo",
+            "formalidad": 0.7
+          },
           "priority_weight": 0.85
         },
         {
           "id": "fiesta",
-          "label": { "es": "Una fiesta", "en": "A party" },
-          "weight": { "evento_tipo": "fiesta", "formalidad": 0.5 },
+          "label": {
+            "es": "Una fiesta",
+            "en": "A party"
+          },
+          "weight": {
+            "evento_tipo": "fiesta",
+            "formalidad": 0.5
+          },
           "priority_weight": 0.8
         },
         {
           "id": "playa",
-          "label": { "es": "A la playa", "en": "To the beach" },
-          "weight": { "evento_tipo": "playa", "formalidad": 0.1 },
+          "label": {
+            "es": "A la playa",
+            "en": "To the beach"
+          },
+          "weight": {
+            "evento_tipo": "playa",
+            "formalidad": 0.1
+          },
           "priority_weight": 0.9
         },
         {
           "id": "casual",
-          "label": { "es": "Salir casual", "en": "Casual outing" },
-          "weight": { "evento_tipo": "casual", "formalidad": 0.2 },
+          "label": {
+            "es": "Salir casual",
+            "en": "Casual outing"
+          },
+          "weight": {
+            "evento_tipo": "casual",
+            "formalidad": 0.2
+          },
           "priority_weight": 0.7
         }
       ]
@@ -208,20 +479,38 @@
       "options": [
         {
           "id": "dia",
-          "label": { "es": "De día", "en": "During the day" },
-          "weight": { "tono": "claro", "calor": 0.3 },
+          "label": {
+            "es": "De día",
+            "en": "During the day"
+          },
+          "weight": {
+            "tono": "claro",
+            "calor": 0.3
+          },
           "priority_weight": 0.7
         },
         {
           "id": "noche",
-          "label": { "es": "De noche", "en": "At night" },
-          "weight": { "tono": "oscuro", "formalidad": 0.2 },
+          "label": {
+            "es": "De noche",
+            "en": "At night"
+          },
+          "weight": {
+            "tono": "oscuro",
+            "formalidad": 0.2
+          },
           "priority_weight": 0.75
         },
         {
           "id": "todo_dia",
-          "label": { "es": "Todo el día", "en": "All day" },
-          "weight": { "tono": "medio", "formalidad": 0.0 },
+          "label": {
+            "es": "Todo el día",
+            "en": "All day"
+          },
+          "weight": {
+            "tono": "medio",
+            "formalidad": 0
+          },
           "priority_weight": 0.6
         }
       ]
@@ -236,32 +525,57 @@
       "options": [
         {
           "id": "muy_formal",
-          "label": { "es": "Muy formal", "en": "Very formal" },
-          "weight": { "formalidad": 1.0 },
+          "label": {
+            "es": "Muy formal",
+            "en": "Very formal"
+          },
+          "weight": {
+            "formalidad": 1
+          },
           "priority_weight": 0.95
         },
         {
           "id": "formal",
-          "label": { "es": "Formal", "en": "Formal" },
-          "weight": { "formalidad": 0.75 },
+          "label": {
+            "es": "Formal",
+            "en": "Formal"
+          },
+          "weight": {
+            "formalidad": 0.75
+          },
           "priority_weight": 0.85
         },
         {
           "id": "semi_formal",
-          "label": { "es": "Semi-formal", "en": "Semi-formal" },
-          "weight": { "formalidad": 0.5 },
+          "label": {
+            "es": "Semi-formal",
+            "en": "Semi-formal"
+          },
+          "weight": {
+            "formalidad": 0.5
+          },
           "priority_weight": 0.75
         },
         {
           "id": "informal",
-          "label": { "es": "Informal", "en": "Informal" },
-          "weight": { "formalidad": 0.2 },
+          "label": {
+            "es": "Informal",
+            "en": "Informal"
+          },
+          "weight": {
+            "formalidad": 0.2
+          },
           "priority_weight": 0.8
         },
         {
           "id": "muy_informal",
-          "label": { "es": "Muy informal", "en": "Very casual" },
-          "weight": { "formalidad": 0.0 },
+          "label": {
+            "es": "Muy informal",
+            "en": "Very casual"
+          },
+          "weight": {
+            "formalidad": 0
+          },
           "priority_weight": 0.9
         }
       ]
@@ -276,14 +590,26 @@
       "options": [
         {
           "id": "si_graduacion",
-          "label": { "es": "Sí", "en": "Yes" },
-          "weight": { "evento_tipo": "graduacion", "formalidad": 0.8 },
+          "label": {
+            "es": "Sí",
+            "en": "Yes"
+          },
+          "weight": {
+            "evento_tipo": "graduacion",
+            "formalidad": 0.8
+          },
           "priority_weight": 0.9
         },
         {
           "id": "no_graduacion",
-          "label": { "es": "No", "en": "No" },
-          "weight": { "evento_tipo": "otro", "formalidad": 0.0 },
+          "label": {
+            "es": "No",
+            "en": "No"
+          },
+          "weight": {
+            "evento_tipo": "otro",
+            "formalidad": 0
+          },
           "priority_weight": 0.5
         }
       ]
@@ -298,20 +624,40 @@
       "options": [
         {
           "id": "interior",
-          "label": { "es": "En interior", "en": "Indoors" },
-          "weight": { "calor": -0.2, "templado": 0.3, "frio": 0.1 },
+          "label": {
+            "es": "En interior",
+            "en": "Indoors"
+          },
+          "weight": {
+            "calor": -0.2,
+            "templado": 0.3,
+            "frio": 0.1
+          },
           "priority_weight": 0.6
         },
         {
           "id": "exterior",
-          "label": { "es": "Al aire libre", "en": "Outdoors" },
-          "weight": { "calor": 0.3, "templado": 0.2, "frio": -0.2 },
+          "label": {
+            "es": "Al aire libre",
+            "en": "Outdoors"
+          },
+          "weight": {
+            "calor": 0.3,
+            "templado": 0.2,
+            "frio": -0.2
+          },
           "priority_weight": 0.7
         },
         {
           "id": "playa_ubicacion",
-          "label": { "es": "En la playa", "en": "At the beach" },
-          "weight": { "evento_tipo": "playa", "calor": 0.5 },
+          "label": {
+            "es": "En la playa",
+            "en": "At the beach"
+          },
+          "weight": {
+            "evento_tipo": "playa",
+            "calor": 0.5
+          },
           "priority_weight": 0.85
         }
       ]
@@ -326,26 +672,46 @@
       "options": [
         {
           "id": "elegante",
-          "label": { "es": "Elegante", "en": "Elegant" },
-          "weight": { "formalidad": 0.9 },
+          "label": {
+            "es": "Elegante",
+            "en": "Elegant"
+          },
+          "weight": {
+            "formalidad": 0.9
+          },
           "priority_weight": 0.9
         },
         {
           "id": "profesional",
-          "label": { "es": "Profesional", "en": "Professional" },
-          "weight": { "formalidad": 0.7 },
+          "label": {
+            "es": "Profesional",
+            "en": "Professional"
+          },
+          "weight": {
+            "formalidad": 0.7
+          },
           "priority_weight": 0.8
         },
         {
           "id": "casual_chic",
-          "label": { "es": "Casual chic", "en": "Smart casual" },
-          "weight": { "formalidad": 0.4 },
+          "label": {
+            "es": "Casual chic",
+            "en": "Smart casual"
+          },
+          "weight": {
+            "formalidad": 0.4
+          },
           "priority_weight": 0.75
         },
         {
           "id": "relajado",
-          "label": { "es": "Relajado", "en": "Relaxed" },
-          "weight": { "formalidad": 0.15 },
+          "label": {
+            "es": "Relajado",
+            "en": "Relaxed"
+          },
+          "weight": {
+            "formalidad": 0.15
+          },
           "priority_weight": 0.85
         }
       ]
@@ -360,14 +726,25 @@
       "options": [
         {
           "id": "si_corbata",
-          "label": { "es": "Sí", "en": "Yes" },
-          "weight": { "formalidad": 0.9, "evento_tipo": "boda" },
+          "label": {
+            "es": "Sí",
+            "en": "Yes"
+          },
+          "weight": {
+            "formalidad": 0.9,
+            "evento_tipo": "boda"
+          },
           "priority_weight": 0.85
         },
         {
           "id": "no_corbata",
-          "label": { "es": "No", "en": "No" },
-          "weight": { "formalidad": -0.3 },
+          "label": {
+            "es": "No",
+            "en": "No"
+          },
+          "weight": {
+            "formalidad": -0.3
+          },
           "priority_weight": 0.7
         }
       ]
@@ -381,22 +758,51 @@
       },
       "options": [
         {
-          "id": "muchos_accesorios",
-          "label": { "es": "Varios accesorios", "en": "Several accessories" },
-          "weight": { "formalidad": 0.3 },
-          "priority_weight": 0.7
+          "id": "reloj",
+          "label": {
+            "es": "Sí, un reloj",
+            "en": "Yes, a watch"
+          },
+          "weight": {
+            "usa_accesorio": "reloj",
+            "formalidad": 0.8
+          },
+          "priority_weight": 0.8
         },
         {
-          "id": "pocos_accesorios",
-          "label": { "es": "Solo un reloj", "en": "Just a watch" },
-          "weight": { "formalidad": 0.2 },
+          "id": "corbata",
+          "label": {
+            "es": "Sí, una corbata",
+            "en": "Yes, a tie"
+          },
+          "weight": {
+            "usa_accesorio": "corbata",
+            "formalidad": 0.9
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "gafas",
+          "label": {
+            "es": "Gafas de sol",
+            "en": "Sunglasses"
+          },
+          "weight": {
+            "usa_accesorio": "gafas_sol"
+          },
           "priority_weight": 0.6
         },
         {
-          "id": "sin_accesorios",
-          "label": { "es": "Ninguno", "en": "None" },
-          "weight": { "formalidad": -0.1 },
-          "priority_weight": 0.5
+          "id": "no",
+          "label": {
+            "es": "No, nada",
+            "en": "No, nothing"
+          },
+          "weight": {
+            "usa_accesorio": "no",
+            "formalidad": 0.2
+          },
+          "priority_weight": 0.8
         }
       ]
     },
@@ -410,26 +816,50 @@
       "options": [
         {
           "id": "clasico",
-          "label": { "es": "Clásico", "en": "Classic" },
-          "weight": { "formalidad": 0.8, "tono": "neutro" },
+          "label": {
+            "es": "Clásico",
+            "en": "Classic"
+          },
+          "weight": {
+            "formalidad": 0.8,
+            "tono": "neutro"
+          },
           "priority_weight": 0.8
         },
         {
           "id": "moderno",
-          "label": { "es": "Moderno", "en": "Modern" },
-          "weight": { "formalidad": 0.5, "tono": "vibrante" },
+          "label": {
+            "es": "Moderno",
+            "en": "Modern"
+          },
+          "weight": {
+            "formalidad": 0.5,
+            "tono": "vibrante"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "deportivo",
-          "label": { "es": "Deportivo", "en": "Sporty" },
-          "weight": { "formalidad": 0.1, "tono": "claro" },
+          "label": {
+            "es": "Deportivo",
+            "en": "Sporty"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "tono": "claro"
+          },
           "priority_weight": 0.85
         },
         {
           "id": "minimalista",
-          "label": { "es": "Minimalista", "en": "Minimalist" },
-          "weight": { "formalidad": 0.4, "tono": "neutro" },
+          "label": {
+            "es": "Minimalista",
+            "en": "Minimalist"
+          },
+          "weight": {
+            "formalidad": 0.4,
+            "tono": "neutro"
+          },
           "priority_weight": 0.7
         }
       ]
@@ -444,366 +874,1226 @@
       "options": [
         {
           "id": "poco_tiempo",
-          "label": { "es": "Menos de 2 horas", "en": "Under 2 hours" },
-          "weight": { "formalidad": 0.0 },
+          "label": {
+            "es": "Menos de 2 horas",
+            "en": "Under 2 hours"
+          },
+          "weight": {
+            "formalidad": 0
+          },
           "priority_weight": 0.5
         },
         {
           "id": "medio_tiempo",
-          "label": { "es": "2-4 horas", "en": "2-4 hours" },
-          "weight": { "formalidad": 0.1 },
+          "label": {
+            "es": "2-4 horas",
+            "en": "2-4 hours"
+          },
+          "weight": {
+            "formalidad": 0.1
+          },
           "priority_weight": 0.6
         },
         {
           "id": "mucho_tiempo",
-          "label": { "es": "Todo el día", "en": "All day" },
-          "weight": { "formalidad": 0.2 },
+          "label": {
+            "es": "Todo el día",
+            "en": "All day"
+          },
+          "weight": {
+            "formalidad": 0.2
+          },
           "priority_weight": 0.7
         }
       ]
     },
     {
-      "id": "color_01",
-      "category": "color",
+      "id": "formalidad_06",
+      "category": "formalidad",
       "text": {
-        "es": "¿Qué color prefieres usar hoy?",
-        "en": "What color do you prefer today?"
+        "es": "¿Prefieres usar ropa de una sola pieza o coordinar varias prendas?",
+        "en": "Do you prefer a one-piece outfit or coordinating separates?"
       },
       "options": [
         {
-          "id": "negro",
-          "label": { "es": "Negro", "en": "Black" },
-          "weight": { "color_grupo": "oscuro", "tono": "neutro" },
-          "priority_weight": 0.85
+          "id": "una_pieza",
+          "label": {
+            "es": "Una sola pieza (Vestido/Conjunto)",
+            "en": "One-piece (Dress/Set)"
+          },
+          "weight": {
+            "conjunto_prefer": 1
+          },
+          "priority_weight": 0.9
         },
         {
-          "id": "blanco",
-          "label": { "es": "Blanco", "en": "White" },
-          "weight": { "color_grupo": "claro", "tono": "neutro" },
-          "priority_weight": 0.8
+          "id": "separadas",
+          "label": {
+            "es": "Varias prendas separadas",
+            "en": "Separate pieces"
+          },
+          "weight": {
+            "conjunto_prefer": -1
+          },
+          "priority_weight": 0.9
         },
         {
-          "id": "azul",
-          "label": { "es": "Azul", "en": "Blue" },
-          "weight": { "color_grupo": "frio", "tono": "medio" },
-          "priority_weight": 0.85
-        },
-        {
-          "id": "rojo",
-          "label": { "es": "Rojo", "en": "Red" },
-          "weight": { "color_grupo": "caliente", "tono": "vibrante" },
-          "priority_weight": 0.75
-        },
-        {
-          "id": "rosa",
-          "label": { "es": "Rosa", "en": "Pink" },
-          "weight": { "color_grupo": "caliente", "tono": "vibrante" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "beige",
-          "label": { "es": "Beige", "en": "Beige" },
-          "weight": { "color_grupo": "neutro", "tono": "claro" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "gris",
-          "label": { "es": "Gris", "en": "Gray" },
-          "weight": { "color_grupo": "neutro", "tono": "medio" },
-          "priority_weight": 0.75
-        }
-      ]
-    },
-    {
-      "id": "color_02",
-      "category": "color",
-      "text": {
-        "es": "¿Prefieres colores claros u oscuros?",
-        "en": "Do you prefer light or dark colors?"
-      },
-      "options": [
-        {
-          "id": "claros",
-          "label": { "es": "Claros", "en": "Light" },
-          "weight": { "tono": "claro", "calor": 0.2 },
-          "priority_weight": 0.8
-        },
-        {
-          "id": "oscuros",
-          "label": { "es": "Oscuros", "en": "Dark" },
-          "weight": { "tono": "oscuro", "formalidad": 0.1 },
-          "priority_weight": 0.8
-        },
-        {
-          "id": "mezcla",
-          "label": { "es": "Una mezcla", "en": "A mix" },
-          "weight": { "tono": "medio" },
-          "priority_weight": 0.6
-        }
-      ]
-    },
-    {
-      "id": "color_03",
-      "category": "color",
-      "text": {
-        "es": "¿Te gustan los colores llamativos?",
-        "en": "Do you like bold colors?"
-      },
-      "options": [
-        {
-          "id": "muy_llamativo",
-          "label": { "es": "Sí, muy llamativos", "en": "Yes, very bold" },
-          "weight": { "tono": "vibrante", "evento_tipo": "fiesta" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "algo_llamativo",
-          "label": { "es": "Algo llamativos", "en": "Somewhat bold" },
-          "weight": { "tono": "medio" },
-          "priority_weight": 0.65
-        },
-        {
-          "id": "sobrios",
-          "label": { "es": "No, prefieren sobrios", "en": "No, prefer subtle" },
-          "weight": { "tono": "neutro", "formalidad": 0.1 },
-          "priority_weight": 0.8
-        }
-      ]
-    },
-    {
-      "id": "color_04",
-      "category": "color",
-      "text": {
-        "es": "¿Cuál es tu color favorito?",
-        "en": "What's your favorite color?"
-      },
-      "options": [
-        {
-          "id": "fav_azul",
-          "label": { "es": "Azul", "en": "Blue" },
-          "weight": { "color_grupo": "frio" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "fav_negro",
-          "label": { "es": "Negro", "en": "Black" },
-          "weight": { "color_grupo": "oscuro" },
-          "priority_weight": 0.75
-        },
-        {
-          "id": "fav_blanco",
-          "label": { "es": "Blanco", "en": "White" },
-          "weight": { "color_grupo": "claro" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "fav_verde",
-          "label": { "es": "Verde", "en": "Green" },
-          "weight": { "color_grupo": "natural" },
-          "priority_weight": 0.65
-        },
-        {
-          "id": "fav_rojo",
-          "label": { "es": "Rojo", "en": "Red" },
-          "weight": { "color_grupo": "caliente" },
-          "priority_weight": 0.7
-        },
-        {
-          "id": "fav_rosa",
-          "label": { "es": "Rosa", "en": "Pink" },
-          "weight": { "color_grupo": "caliente" },
-          "priority_weight": 0.65
-        }
-      ]
-    },
-    {
-      "id": "color_05",
-      "category": "color",
-      "text": {
-        "es": "¿Hay algún color que no te guste usar?",
-        "en": "Is there any color you don't like to wear?"
-      },
-      "options": [
-        {
-          "id": "no_rojo",
-          "label": { "es": "No me gusta el rojo", "en": "I don't like red" },
-          "weight": { "color_grupo": "-caliente" },
-          "priority_weight": 0.6
-        },
-        {
-          "id": "no_blanco",
-          "label": { "es": "No me gusta el blanco", "en": "I don't like white" },
-          "weight": { "color_grupo": "-claro" },
-          "priority_weight": 0.55
-        },
-        {
-          "id": "no_negro",
-          "label": { "es": "No me gusta el negro", "en": "I don't like black" },
-          "weight": { "color_grupo": "-oscuro" },
-          "priority_weight": 0.55
-        },
-        {
-          "id": "me_gustan_todos",
-          "label": { "es": "Me gustan todos", "en": "I like them all" },
-          "weight": { "color_grupo": "neutro" },
+          "id": "indiferente",
+          "label": {
+            "es": "Cualquiera",
+            "en": "Whatever works"
+          },
+          "weight": {
+            "conjunto_prefer": 0
+          },
           "priority_weight": 0.5
         }
       ]
     },
     {
-      "id": "textura_01",
+      "id": "color_01_sup",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What color do you prefer for your top (shirt/blouse/dress)?"
+      },
+      "options": [
+        {
+          "id": "negro",
+          "label": {
+            "es": "Negro",
+            "en": "Black"
+          },
+          "weight": {
+            "color_sup": "oscuro",
+            "tono_sup": "neutro"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "blanco",
+          "label": {
+            "es": "Blanco",
+            "en": "White"
+          },
+          "weight": {
+            "color_sup": "claro",
+            "tono_sup": "neutro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "azul",
+          "label": {
+            "es": "Azul",
+            "en": "Blue"
+          },
+          "weight": {
+            "color_sup": "frio",
+            "tono_sup": "medio"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "rojo",
+          "label": {
+            "es": "Rojo",
+            "en": "Red"
+          },
+          "weight": {
+            "color_sup": "caliente",
+            "tono_sup": "vibrante"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "rosa",
+          "label": {
+            "es": "Rosa",
+            "en": "Pink"
+          },
+          "weight": {
+            "color_sup": "caliente",
+            "tono_sup": "vibrante"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "beige",
+          "label": {
+            "es": "Beige",
+            "en": "Beige"
+          },
+          "weight": {
+            "color_sup": "neutro",
+            "tono_sup": "claro"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "gris",
+          "label": {
+            "es": "Gris",
+            "en": "Gray"
+          },
+          "weight": {
+            "color_sup": "neutro",
+            "tono_sup": "medio"
+          },
+          "priority_weight": 0.75
+        }
+      ]
+    },
+    {
+      "id": "color_01_inf",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What color do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "negro",
+          "label": {
+            "es": "Negro",
+            "en": "Black"
+          },
+          "weight": {
+            "color_inf": "oscuro",
+            "tono_inf": "neutro"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "blanco",
+          "label": {
+            "es": "Blanco",
+            "en": "White"
+          },
+          "weight": {
+            "color_inf": "claro",
+            "tono_inf": "neutro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "azul",
+          "label": {
+            "es": "Azul",
+            "en": "Blue"
+          },
+          "weight": {
+            "color_inf": "frio",
+            "tono_inf": "medio"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "rojo",
+          "label": {
+            "es": "Rojo",
+            "en": "Red"
+          },
+          "weight": {
+            "color_inf": "caliente",
+            "tono_inf": "vibrante"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "rosa",
+          "label": {
+            "es": "Rosa",
+            "en": "Pink"
+          },
+          "weight": {
+            "color_inf": "caliente",
+            "tono_inf": "vibrante"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "beige",
+          "label": {
+            "es": "Beige",
+            "en": "Beige"
+          },
+          "weight": {
+            "color_inf": "neutro",
+            "tono_inf": "claro"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "gris",
+          "label": {
+            "es": "Gris",
+            "en": "Gray"
+          },
+          "weight": {
+            "color_inf": "neutro",
+            "tono_inf": "medio"
+          },
+          "priority_weight": 0.75
+        }
+      ]
+    },
+    {
+      "id": "color_02_sup",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What color do you prefer for your top (shirt/blouse/dress)?"
+      },
+      "options": [
+        {
+          "id": "claros",
+          "label": {
+            "es": "Claros",
+            "en": "Light"
+          },
+          "weight": {
+            "calor": 0.2,
+            "tono_sup": "claro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "oscuros",
+          "label": {
+            "es": "Oscuros",
+            "en": "Dark"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "tono_sup": "oscuro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "mezcla",
+          "label": {
+            "es": "Una mezcla",
+            "en": "A mix"
+          },
+          "weight": {
+            "tono_sup": "medio"
+          },
+          "priority_weight": 0.6
+        }
+      ]
+    },
+    {
+      "id": "color_02_inf",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What color do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "claros",
+          "label": {
+            "es": "Claros",
+            "en": "Light"
+          },
+          "weight": {
+            "calor": 0.2,
+            "tono_inf": "claro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "oscuros",
+          "label": {
+            "es": "Oscuros",
+            "en": "Dark"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "tono_inf": "oscuro"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "mezcla",
+          "label": {
+            "es": "Una mezcla",
+            "en": "A mix"
+          },
+          "weight": {
+            "tono_inf": "medio"
+          },
+          "priority_weight": 0.6
+        }
+      ]
+    },
+    {
+      "id": "color_03_sup",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What color do you prefer for your top (shirt/blouse/dress)?"
+      },
+      "options": [
+        {
+          "id": "muy_llamativo",
+          "label": {
+            "es": "Sí, muy llamativos",
+            "en": "Yes, very bold"
+          },
+          "weight": {
+            "evento_tipo": "fiesta",
+            "tono_sup": "vibrante"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "algo_llamativo",
+          "label": {
+            "es": "Algo llamativos",
+            "en": "Somewhat bold"
+          },
+          "weight": {
+            "tono_sup": "medio"
+          },
+          "priority_weight": 0.65
+        },
+        {
+          "id": "sobrios",
+          "label": {
+            "es": "No, prefieren sobrios",
+            "en": "No, prefer subtle"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "tono_sup": "neutro"
+          },
+          "priority_weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": "color_03_inf",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What color do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "muy_llamativo",
+          "label": {
+            "es": "Sí, muy llamativos",
+            "en": "Yes, very bold"
+          },
+          "weight": {
+            "evento_tipo": "fiesta",
+            "tono_inf": "vibrante"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "algo_llamativo",
+          "label": {
+            "es": "Algo llamativos",
+            "en": "Somewhat bold"
+          },
+          "weight": {
+            "tono_inf": "medio"
+          },
+          "priority_weight": 0.65
+        },
+        {
+          "id": "sobrios",
+          "label": {
+            "es": "No, prefieren sobrios",
+            "en": "No, prefer subtle"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "tono_inf": "neutro"
+          },
+          "priority_weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": "color_04_sup",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What color do you prefer for your top (shirt/blouse/dress)?"
+      },
+      "options": [
+        {
+          "id": "fav_azul",
+          "label": {
+            "es": "Azul",
+            "en": "Blue"
+          },
+          "weight": {
+            "color_sup": "frio"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_negro",
+          "label": {
+            "es": "Negro",
+            "en": "Black"
+          },
+          "weight": {
+            "color_sup": "oscuro"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "fav_blanco",
+          "label": {
+            "es": "Blanco",
+            "en": "White"
+          },
+          "weight": {
+            "color_sup": "claro"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_verde",
+          "label": {
+            "es": "Verde",
+            "en": "Green"
+          },
+          "weight": {
+            "color_sup": "natural"
+          },
+          "priority_weight": 0.65
+        },
+        {
+          "id": "fav_rojo",
+          "label": {
+            "es": "Rojo",
+            "en": "Red"
+          },
+          "weight": {
+            "color_sup": "caliente"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_rosa",
+          "label": {
+            "es": "Rosa",
+            "en": "Pink"
+          },
+          "weight": {
+            "color_sup": "caliente"
+          },
+          "priority_weight": 0.65
+        }
+      ]
+    },
+    {
+      "id": "color_04_inf",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What color do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "fav_azul",
+          "label": {
+            "es": "Azul",
+            "en": "Blue"
+          },
+          "weight": {
+            "color_inf": "frio"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_negro",
+          "label": {
+            "es": "Negro",
+            "en": "Black"
+          },
+          "weight": {
+            "color_inf": "oscuro"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "fav_blanco",
+          "label": {
+            "es": "Blanco",
+            "en": "White"
+          },
+          "weight": {
+            "color_inf": "claro"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_verde",
+          "label": {
+            "es": "Verde",
+            "en": "Green"
+          },
+          "weight": {
+            "color_inf": "natural"
+          },
+          "priority_weight": 0.65
+        },
+        {
+          "id": "fav_rojo",
+          "label": {
+            "es": "Rojo",
+            "en": "Red"
+          },
+          "weight": {
+            "color_inf": "caliente"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "fav_rosa",
+          "label": {
+            "es": "Rosa",
+            "en": "Pink"
+          },
+          "weight": {
+            "color_inf": "caliente"
+          },
+          "priority_weight": 0.65
+        }
+      ]
+    },
+    {
+      "id": "color_05_sup",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What color do you prefer for your top (shirt/blouse/dress)?"
+      },
+      "options": [
+        {
+          "id": "no_rojo",
+          "label": {
+            "es": "No me gusta el rojo",
+            "en": "I don't like red"
+          },
+          "weight": {
+            "color_sup": "-caliente"
+          },
+          "priority_weight": 0.6
+        },
+        {
+          "id": "no_blanco",
+          "label": {
+            "es": "No me gusta el blanco",
+            "en": "I don't like white"
+          },
+          "weight": {
+            "color_sup": "-claro"
+          },
+          "priority_weight": 0.55
+        },
+        {
+          "id": "no_negro",
+          "label": {
+            "es": "No me gusta el negro",
+            "en": "I don't like black"
+          },
+          "weight": {
+            "color_sup": "-oscuro"
+          },
+          "priority_weight": 0.55
+        },
+        {
+          "id": "me_gustan_todos",
+          "label": {
+            "es": "Me gustan todos",
+            "en": "I like them all"
+          },
+          "weight": {
+            "color_sup": "neutro"
+          },
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": "color_05_inf",
+      "category": "color",
+      "text": {
+        "es": "¿Qué color prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What color do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "no_rojo",
+          "label": {
+            "es": "No me gusta el rojo",
+            "en": "I don't like red"
+          },
+          "weight": {
+            "color_inf": "-caliente"
+          },
+          "priority_weight": 0.6
+        },
+        {
+          "id": "no_blanco",
+          "label": {
+            "es": "No me gusta el blanco",
+            "en": "I don't like white"
+          },
+          "weight": {
+            "color_inf": "-claro"
+          },
+          "priority_weight": 0.55
+        },
+        {
+          "id": "no_negro",
+          "label": {
+            "es": "No me gusta el negro",
+            "en": "I don't like black"
+          },
+          "weight": {
+            "color_inf": "-oscuro"
+          },
+          "priority_weight": 0.55
+        },
+        {
+          "id": "me_gustan_todos",
+          "label": {
+            "es": "Me gustan todos",
+            "en": "I like them all"
+          },
+          "weight": {
+            "color_inf": "neutro"
+          },
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": "textura_01_sup",
       "category": "textura",
       "text": {
-        "es": "¿Qué tipo de tela prefieres?",
-        "en": "What type of fabric do you prefer?"
+        "es": "¿Qué material prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What material do you prefer for your top (shirt/blouse/dress)?"
       },
       "options": [
         {
           "id": "algodon",
-          "label": { "es": "Algodón", "en": "Cotton" },
-          "weight": { "textura": "algodon", "calor": 0.2 },
+          "label": {
+            "es": "Algodón",
+            "en": "Cotton"
+          },
+          "weight": {
+            "calor": 0.2,
+            "textura_sup": "algodon"
+          },
           "priority_weight": 0.85
         },
         {
           "id": "seda",
-          "label": { "es": "Seda", "en": "Silk" },
-          "weight": { "textura": "seda", "formalidad": 0.3 },
+          "label": {
+            "es": "Seda",
+            "en": "Silk"
+          },
+          "weight": {
+            "formalidad": 0.3,
+            "textura_sup": "seda"
+          },
           "priority_weight": 0.7
         },
         {
           "id": "lino",
-          "label": { "es": "Lino", "en": "Linen" },
-          "weight": { "textura": "lino", "calor": 0.3 },
+          "label": {
+            "es": "Lino",
+            "en": "Linen"
+          },
+          "weight": {
+            "calor": 0.3,
+            "textura_sup": "lino"
+          },
           "priority_weight": 0.8
         },
         {
           "id": "lana",
-          "label": { "es": "Lana", "en": "Wool" },
-          "weight": { "textura": "lana", "frio": 0.3 },
+          "label": {
+            "es": "Lana",
+            "en": "Wool"
+          },
+          "weight": {
+            "frio": 0.3,
+            "textura_sup": "lana"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "cuero",
-          "label": { "es": "Cuero", "en": "Leather" },
-          "weight": { "textura": "cuero", "formalidad": 0.2 },
+          "label": {
+            "es": "Cuero",
+            "en": "Leather"
+          },
+          "weight": {
+            "formalidad": 0.2,
+            "textura_sup": "cuero"
+          },
           "priority_weight": 0.7
         },
         {
           "id": "denim",
-          "label": { "es": "Mezclilla", "en": "Denim" },
-          "weight": { "textura": "denim", "formalidad": -0.2 },
+          "label": {
+            "es": "Mezclilla",
+            "en": "Denim"
+          },
+          "weight": {
+            "formalidad": -0.2,
+            "textura_sup": "denim"
+          },
           "priority_weight": 0.8
         }
       ]
     },
     {
-      "id": "textura_02",
+      "id": "textura_01_inf",
       "category": "textura",
       "text": {
-        "es": "¿Prefieres tela ligera o pesada?",
-        "en": "Do you prefer lightweight or heavy fabric?"
+        "es": "¿Qué material prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What material do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "algodon",
+          "label": {
+            "es": "Algodón",
+            "en": "Cotton"
+          },
+          "weight": {
+            "calor": 0.2,
+            "textura_inf": "algodon"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "seda",
+          "label": {
+            "es": "Seda",
+            "en": "Silk"
+          },
+          "weight": {
+            "formalidad": 0.3,
+            "textura_inf": "seda"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "lino",
+          "label": {
+            "es": "Lino",
+            "en": "Linen"
+          },
+          "weight": {
+            "calor": 0.3,
+            "textura_inf": "lino"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "lana",
+          "label": {
+            "es": "Lana",
+            "en": "Wool"
+          },
+          "weight": {
+            "frio": 0.3,
+            "textura_inf": "lana"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "cuero",
+          "label": {
+            "es": "Cuero",
+            "en": "Leather"
+          },
+          "weight": {
+            "formalidad": 0.2,
+            "textura_inf": "cuero"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "denim",
+          "label": {
+            "es": "Mezclilla",
+            "en": "Denim"
+          },
+          "weight": {
+            "formalidad": -0.2,
+            "textura_inf": "denim"
+          },
+          "priority_weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": "textura_02_sup",
+      "category": "textura",
+      "text": {
+        "es": "¿Qué material prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What material do you prefer for your top (shirt/blouse/dress)?"
       },
       "options": [
         {
           "id": "ligera",
-          "label": { "es": "Ligera", "en": "Lightweight" },
-          "weight": { "calor": 0.4, "textura": "algodon" },
+          "label": {
+            "es": "Ligera",
+            "en": "Lightweight"
+          },
+          "weight": {
+            "calor": 0.4,
+            "textura_sup": "algodon"
+          },
           "priority_weight": 0.8
         },
         {
           "id": "mediana",
-          "label": { "es": "Media", "en": "Medium" },
-          "weight": { "templado": 0.3 },
+          "label": {
+            "es": "Media",
+            "en": "Medium"
+          },
+          "weight": {
+            "templado": 0.3
+          },
           "priority_weight": 0.7
         },
         {
           "id": "pesada",
-          "label": { "es": "Pesada", "en": "Heavy" },
-          "weight": { "frio": 0.4, "textura": "lana" },
+          "label": {
+            "es": "Pesada",
+            "en": "Heavy"
+          },
+          "weight": {
+            "frio": 0.4,
+            "textura_sup": "lana"
+          },
           "priority_weight": 0.75
         }
       ]
     },
     {
-      "id": "textura_03",
+      "id": "textura_02_inf",
       "category": "textura",
       "text": {
-        "es": "¿Te gusta la textura suave o rígida?",
-        "en": "Do you like soft or stiff texture?"
+        "es": "¿Qué material prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What material do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "ligera",
+          "label": {
+            "es": "Ligera",
+            "en": "Lightweight"
+          },
+          "weight": {
+            "calor": 0.4,
+            "textura_inf": "algodon"
+          },
+          "priority_weight": 0.8
+        },
+        {
+          "id": "mediana",
+          "label": {
+            "es": "Media",
+            "en": "Medium"
+          },
+          "weight": {
+            "templado": 0.3
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "pesada",
+          "label": {
+            "es": "Pesada",
+            "en": "Heavy"
+          },
+          "weight": {
+            "frio": 0.4,
+            "textura_inf": "lana"
+          },
+          "priority_weight": 0.75
+        }
+      ]
+    },
+    {
+      "id": "textura_03_sup",
+      "category": "textura",
+      "text": {
+        "es": "¿Qué material prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What material do you prefer for your top (shirt/blouse/dress)?"
       },
       "options": [
         {
           "id": "suave",
-          "label": { "es": "Suave", "en": "Soft" },
-          "weight": { "textura": "algodon", "formalidad": -0.1 },
+          "label": {
+            "es": "Suave",
+            "en": "Soft"
+          },
+          "weight": {
+            "formalidad": -0.1,
+            "textura_sup": "algodon"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "semi_rigida",
-          "label": { "es": "Semi-rígida", "en": "Semi-stiff" },
-          "weight": { "textura": "tela" },
+          "label": {
+            "es": "Semi-rígida",
+            "en": "Semi-stiff"
+          },
+          "weight": {
+            "textura_sup": "tela"
+          },
           "priority_weight": 0.65
         },
         {
           "id": "rigida",
-          "label": { "es": "Rígida", "en": "Stiff" },
-          "weight": { "textura": "cuero", "formalidad": 0.2 },
+          "label": {
+            "es": "Rígida",
+            "en": "Stiff"
+          },
+          "weight": {
+            "formalidad": 0.2,
+            "textura_sup": "cuero"
+          },
           "priority_weight": 0.7
         }
       ]
     },
     {
-      "id": "textura_04",
+      "id": "textura_03_inf",
       "category": "textura",
       "text": {
-        "es": "¿Buscas transpirabilidad?",
-        "en": "Are you looking for breathability?"
+        "es": "¿Qué material prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What material do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "suave",
+          "label": {
+            "es": "Suave",
+            "en": "Soft"
+          },
+          "weight": {
+            "formalidad": -0.1,
+            "textura_inf": "algodon"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "semi_rigida",
+          "label": {
+            "es": "Semi-rígida",
+            "en": "Semi-stiff"
+          },
+          "weight": {
+            "textura_inf": "tela"
+          },
+          "priority_weight": 0.65
+        },
+        {
+          "id": "rigida",
+          "label": {
+            "es": "Rígida",
+            "en": "Stiff"
+          },
+          "weight": {
+            "formalidad": 0.2,
+            "textura_inf": "cuero"
+          },
+          "priority_weight": 0.7
+        }
+      ]
+    },
+    {
+      "id": "textura_04_sup",
+      "category": "textura",
+      "text": {
+        "es": "¿Qué material prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What material do you prefer for your top (shirt/blouse/dress)?"
       },
       "options": [
         {
           "id": "muy_transpirable",
-          "label": { "es": "Sí, muy transpirable", "en": "Yes, very breathable" },
-          "weight": { "calor": 0.5, "textura": "lino" },
+          "label": {
+            "es": "Sí, muy transpirable",
+            "en": "Yes, very breathable"
+          },
+          "weight": {
+            "calor": 0.5,
+            "textura_sup": "lino"
+          },
           "priority_weight": 0.85
         },
         {
           "id": "algo_transpirable",
-          "label": { "es": "Algo transpirable", "en": "Somewhat breathable" },
-          "weight": { "calor": 0.2, "textura": "algodon" },
+          "label": {
+            "es": "Algo transpirable",
+            "en": "Somewhat breathable"
+          },
+          "weight": {
+            "calor": 0.2,
+            "textura_sup": "algodon"
+          },
           "priority_weight": 0.7
         },
         {
           "id": "no_importa",
-          "label": { "es": "No me importa", "en": "Doesn't matter" },
+          "label": {
+            "es": "No me importa",
+            "en": "Doesn't matter"
+          },
           "weight": {},
           "priority_weight": 0.5
         }
       ]
     },
     {
-      "id": "textura_05",
+      "id": "textura_04_inf",
       "category": "textura",
       "text": {
-        "es": "¿Te gusta el brillo en la tela?",
-        "en": "Do you like shiny fabric?"
+        "es": "¿Qué material prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What material do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "muy_transpirable",
+          "label": {
+            "es": "Sí, muy transpirable",
+            "en": "Yes, very breathable"
+          },
+          "weight": {
+            "calor": 0.5,
+            "textura_inf": "lino"
+          },
+          "priority_weight": 0.85
+        },
+        {
+          "id": "algo_transpirable",
+          "label": {
+            "es": "Algo transpirable",
+            "en": "Somewhat breathable"
+          },
+          "weight": {
+            "calor": 0.2,
+            "textura_inf": "algodon"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "no_importa",
+          "label": {
+            "es": "No me importa",
+            "en": "Doesn't matter"
+          },
+          "weight": {},
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
+      "id": "textura_05_sup",
+      "category": "textura",
+      "text": {
+        "es": "¿Qué material prefieres para la parte superior (camisa/blusa/vestido)?",
+        "en": "What material do you prefer for your top (shirt/blouse/dress)?"
       },
       "options": [
         {
           "id": "brillante",
-          "label": { "es": "Sí, brillante", "en": "Yes, shiny" },
-          "weight": { "textura": "seda", "evento_tipo": "fiesta" },
+          "label": {
+            "es": "Sí, brillante",
+            "en": "Yes, shiny"
+          },
+          "weight": {
+            "evento_tipo": "fiesta",
+            "textura_sup": "seda"
+          },
           "priority_weight": 0.7
         },
         {
           "id": "mate",
-          "label": { "es": "No, mate", "en": "No, matte" },
-          "weight": { "textura": "algodon", "formalidad": 0.1 },
+          "label": {
+            "es": "No, mate",
+            "en": "No, matte"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "textura_sup": "algodon"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "semi_brillante",
-          "label": { "es": "Algo brillante", "en": "Slightly shiny" },
-          "weight": { "textura": "tela" },
+          "label": {
+            "es": "Algo brillante",
+            "en": "Slightly shiny"
+          },
+          "weight": {
+            "textura_sup": "tela"
+          },
+          "priority_weight": 0.6
+        }
+      ]
+    },
+    {
+      "id": "textura_05_inf",
+      "category": "textura",
+      "text": {
+        "es": "¿Qué material prefieres para la parte inferior (pantalón/falda)?",
+        "en": "What material do you prefer for your bottom (pants/skirt)?"
+      },
+      "options": [
+        {
+          "id": "brillante",
+          "label": {
+            "es": "Sí, brillante",
+            "en": "Yes, shiny"
+          },
+          "weight": {
+            "evento_tipo": "fiesta",
+            "textura_inf": "seda"
+          },
+          "priority_weight": 0.7
+        },
+        {
+          "id": "mate",
+          "label": {
+            "es": "No, mate",
+            "en": "No, matte"
+          },
+          "weight": {
+            "formalidad": 0.1,
+            "textura_inf": "algodon"
+          },
+          "priority_weight": 0.75
+        },
+        {
+          "id": "semi_brillante",
+          "label": {
+            "es": "Algo brillante",
+            "en": "Slightly shiny"
+          },
+          "weight": {
+            "textura_inf": "tela"
+          },
           "priority_weight": 0.6
         }
       ]
@@ -818,26 +2108,49 @@
       "options": [
         {
           "id": "fav_camisa",
-          "label": { "es": "Camisa", "en": "Shirt" },
-          "weight": { "formalidad": 0.3, "evento_tipo": "trabajo" },
+          "label": {
+            "es": "Camisa",
+            "en": "Shirt"
+          },
+          "weight": {
+            "formalidad": 0.3,
+            "evento_tipo": "trabajo"
+          },
           "priority_weight": 0.7
         },
         {
           "id": "fav_camiseta",
-          "label": { "es": "Camiseta", "en": "T-Shirt" },
-          "weight": { "formalidad": -0.2, "evento_tipo": "casual" },
+          "label": {
+            "es": "Camiseta",
+            "en": "T-Shirt"
+          },
+          "weight": {
+            "formalidad": -0.2,
+            "evento_tipo": "casual"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "fav_pantalon",
-          "label": { "es": "Pantalón", "en": "Pants" },
-          "weight": { "formalidad": 0.1 },
+          "label": {
+            "es": "Pantalón",
+            "en": "Pants"
+          },
+          "weight": {
+            "formalidad": 0.1
+          },
           "priority_weight": 0.65
         },
         {
           "id": "fav_vestido",
-          "label": { "es": "Falda/Vestido", "en": "Skirt/Dress" },
-          "weight": { "formalidad": 0.2, "evento_tipo": "boda" },
+          "label": {
+            "es": "Falda/Vestido",
+            "en": "Skirt/Dress"
+          },
+          "weight": {
+            "formalidad": 0.2,
+            "evento_tipo": "boda"
+          },
           "priority_weight": 0.7
         }
       ]
@@ -851,22 +2164,28 @@
       },
       "options": [
         {
-          "id": "si_capas",
-          "label": { "es": "Sí, me gusta", "en": "Yes, I like it" },
-          "weight": { "frio": 0.2, "formalidad": 0.1 },
-          "priority_weight": 0.7
+          "id": "si",
+          "label": {
+            "es": "Sí, me encantan",
+            "en": "Yes, love them"
+          },
+          "weight": {
+            "usa_capa": "si",
+            "frio": 0.8
+          },
+          "priority_weight": 0.5
         },
         {
-          "id": "no_capas",
-          "label": { "es": "No, solo una prenda", "en": "No, just one piece" },
-          "weight": { "calor": 0.2 },
-          "priority_weight": 0.75
-        },
-        {
-          "id": "a_veces",
-          "label": { "es": "Depende del clima", "en": "Depends on weather" },
-          "weight": {},
-          "priority_weight": 0.6
+          "id": "no",
+          "label": {
+            "es": "No, prefiero ropa ligera",
+            "en": "No, light clothes"
+          },
+          "weight": {
+            "usa_capa": "no",
+            "calor": 0.8
+          },
+          "priority_weight": 0.5
         }
       ]
     },
@@ -880,61 +2199,51 @@
       "options": [
         {
           "id": "zapatos_formales",
-          "label": { "es": "Zapatos formales", "en": "Formal shoes" },
-          "weight": { "formalidad": 0.4, "evento_tipo": "boda" },
+          "label": {
+            "es": "Zapatos formales",
+            "en": "Formal shoes"
+          },
+          "weight": {
+            "formalidad": 0.4,
+            "evento_tipo": "boda"
+          },
           "priority_weight": 0.8
         },
         {
           "id": "zapatillas_deportivas",
-          "label": { "es": "Zapatillas deportivas", "en": "Sneakers" },
-          "weight": { "formalidad": -0.2, "evento_tipo": "casual" },
+          "label": {
+            "es": "Zapatillas deportivas",
+            "en": "Sneakers"
+          },
+          "weight": {
+            "formalidad": -0.2,
+            "evento_tipo": "casual"
+          },
           "priority_weight": 0.8
         },
         {
           "id": "sandalias_favoritas",
-          "label": { "es": "Sandalias", "en": "Sandals" },
-          "weight": { "calor": 0.3, "evento_tipo": "playa" },
+          "label": {
+            "es": "Sandalias",
+            "en": "Sandals"
+          },
+          "weight": {
+            "calor": 0.3,
+            "evento_tipo": "playa"
+          },
           "priority_weight": 0.75
         },
         {
           "id": "botas_favoritas",
-          "label": { "es": "Botas", "en": "Boots" },
-          "weight": { "frio": 0.3, "textura": "cuero" },
+          "label": {
+            "es": "Botas",
+            "en": "Boots"
+          },
+          "weight": {
+            "frio": 0.3,
+            "textura": "cuero"
+          },
           "priority_weight": 0.7
-        }
-      ]
-    },
-    {
-      "id": "pref_04",
-      "category": "preferencia",
-      "text": {
-        "es": "¿Cuál es tu color de piel?",
-        "en": "What's your skin tone?"
-      },
-      "options": [
-        {
-          "id": "clara",
-          "label": { "es": "Clara", "en": "Light" },
-          "weight": { "tono": "claro" },
-          "priority_weight": 0.6
-        },
-        {
-          "id": "media",
-          "label": { "es": "Media", "en": "Medium" },
-          "weight": { "tono": "medio" },
-          "priority_weight": 0.6
-        },
-        {
-          "id": "morena",
-          "label": { "es": "Morena", "en": "Dark" },
-          "weight": { "tono": "oscuro" },
-          "priority_weight": 0.6
-        },
-        {
-          "id": "no_decir",
-          "label": { "es": "Prefiero no decir", "en": "Rather not say" },
-          "weight": {},
-          "priority_weight": 0.5
         }
       ]
     },
@@ -948,20 +2257,36 @@
       "options": [
         {
           "id": "maxima_comodidad",
-          "label": { "es": "Máxima comodidad", "en": "Maximum comfort" },
-          "weight": { "formalidad": -0.3, "textura": "algodon" },
+          "label": {
+            "es": "Máxima comodidad",
+            "en": "Maximum comfort"
+          },
+          "weight": {
+            "formalidad": -0.3,
+            "textura": "algodon"
+          },
           "priority_weight": 0.85
         },
         {
           "id": "comodidad_estilo",
-          "label": { "es": "Comodidad con estilo", "en": "Comfort with style" },
-          "weight": { "formalidad": 0.2 },
+          "label": {
+            "es": "Comodidad con estilo",
+            "en": "Comfort with style"
+          },
+          "weight": {
+            "formalidad": 0.2
+          },
           "priority_weight": 0.75
         },
         {
           "id": "estilo_primero",
-          "label": { "es": "Estilo primero", "en": "Style first" },
-          "weight": { "formalidad": 0.4 },
+          "label": {
+            "es": "Estilo primero",
+            "en": "Style first"
+          },
+          "weight": {
+            "formalidad": 0.4
+          },
           "priority_weight": 0.8
         }
       ]
@@ -976,20 +2301,35 @@
       "options": [
         {
           "id": "conjuntos",
-          "label": { "es": "Conjuntos de una pieza", "en": "One-piece outfits" },
-          "weight": { "conjunto_prefer": 1.0 },
+          "label": {
+            "es": "Conjuntos de una pieza",
+            "en": "One-piece outfits"
+          },
+          "weight": {
+            "conjunto_prefer": 1
+          },
           "priority_weight": 0.8
         },
         {
           "id": "combinables",
-          "label": { "es": "Piezas combinables", "en": "Mix-and-match pieces" },
-          "weight": { "conjunto_prefer": -1.0 },
+          "label": {
+            "es": "Piezas combinables",
+            "en": "Mix-and-match pieces"
+          },
+          "weight": {
+            "conjunto_prefer": -1
+          },
           "priority_weight": 0.8
         },
         {
           "id": "ambos",
-          "label": { "es": "Ambos por igual", "en": "Both equally" },
-          "weight": { "conjunto_prefer": 0.0 },
+          "label": {
+            "es": "Ambos por igual",
+            "en": "Both equally"
+          },
+          "weight": {
+            "conjunto_prefer": 0
+          },
           "priority_weight": 0.6
         }
       ]
@@ -1004,20 +2344,35 @@
       "options": [
         {
           "id": "vestido_si",
-          "label": { "es": "Sí, me encantan", "en": "Yes, I love them" },
-          "weight": { "conjunto_prefer": 0.8 },
+          "label": {
+            "es": "Sí, me encantan",
+            "en": "Yes, I love them"
+          },
+          "weight": {
+            "conjunto_prefer": 0.8
+          },
           "priority_weight": 0.75
         },
         {
           "id": "vestido_algunas",
-          "label": { "es": "A veces, según la ocasión", "en": "Sometimes, depending on the occasion" },
-          "weight": { "conjunto_prefer": 0.3 },
+          "label": {
+            "es": "A veces, según la ocasión",
+            "en": "Sometimes, depending on the occasion"
+          },
+          "weight": {
+            "conjunto_prefer": 0.3
+          },
           "priority_weight": 0.6
         },
         {
           "id": "vestido_no",
-          "label": { "es": "No mucho", "en": "Not really" },
-          "weight": { "conjunto_prefer": -0.5 },
+          "label": {
+            "es": "No mucho",
+            "en": "Not really"
+          },
+          "weight": {
+            "conjunto_prefer": -0.5
+          },
           "priority_weight": 0.7
         }
       ]
