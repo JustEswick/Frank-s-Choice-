@@ -23,7 +23,7 @@ This game isn't just an RPG; it's a full academic implementation of AI Symbolic 
 - **Bayesian Inference:** Frank updates his mental model of your outfit in real-time by multiplying the probability weights of your answers against his database.
 - **Extended Kalman Filter:** To detect lies, the system tracks the "mathematical tension" (innovation) between your current answer and the running average of your previous answers. High tension = Strike.
 
-*Note: For the full academic breakdown, refer to the private documentation in `Documentación del proyecto/Proyecto_Final_Reporte.md`.*
+
 
 ---
 
